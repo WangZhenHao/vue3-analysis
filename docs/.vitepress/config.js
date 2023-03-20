@@ -9,6 +9,7 @@ export default defineConfig({
   description: '直白，简单的方式去学习Vue3源码',
   themeConfig: {
     nav: [
+      { text: '首页', link: '/' },
       { text: '文档仓库', link: 'https://github.com/vuejs/vitepress/issues/1506' },
       { text: 'Vue3官方仓库', link: 'https://github.com/vuejs/core' }
     ],
