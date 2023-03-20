@@ -10,7 +10,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
-      { text: '文档仓库', link: 'https://github.com/vuejs/vitepress/issues/1506' },
+      { text: '文档仓库', link: 'https://github.com/WangZhenHao/vue3-analysis' },
       { text: 'Vue3官方仓库', link: 'https://github.com/vuejs/core' }
     ],
 

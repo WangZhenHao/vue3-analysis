@@ -1,9 +1,15 @@
 # Vue3源码解析文档
 
+>直白，简单的方式去学习Vue3源码
+
+- 讲述vue3项目搭建，实现原理，列举简单案例，了解原理之后，开发的事情，将会变得很简单
+## git仓库
+https://github.com/WangZhenHao/vue3-analysis
+
 ## 文档地址
 https://wangzhenhao.github.io/vue3-analysis/
 
-## 文档构建vitepress
+## vitepress文档使用
 https://vitepress.dev/
 
 ## github action自动部署
