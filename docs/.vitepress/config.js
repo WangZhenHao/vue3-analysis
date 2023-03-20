@@ -21,6 +21,7 @@ export default defineConfig({
           { text: '读源码步骤', link: '/start/preface' },
           { text: 'Vue3项目构建流程', link: '/start/build' },
           { text: 'es6的新特性', link: '/start/es6' },
+          { text: '联系&讨论', link: '/start/contact' },
         ],
       },
       {
