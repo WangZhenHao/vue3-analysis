@@ -29,6 +29,7 @@ export default defineConfig({
         items: [
           { text: 'Vue渲染流程', link: '/reactive/optionApi' },
           { text: 'data响应式', link: '/reactive/data' },
+          { text: 'proxy在vue的应用', link: '/reactive/proxy' }
         ],
       }
     ],
