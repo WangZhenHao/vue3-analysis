@@ -8,6 +8,7 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs"
   },
+  "homepage": "https://wangzhenhao.github.io/vue3-analysis",
   "keywords": [],
   "author": "",
   "license": "ISC",
