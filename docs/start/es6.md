@@ -7,7 +7,7 @@ Map 中的一个键只能出现一次；它在 Map 的集合中是独一无二�
 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map
 
-```
+```js
 const contacts = new Map()
 contacts.set('Jessie', {phone: "213-555-1234", address: "123 N 1st Ave"})
 contacts.has('Jessie') // true
@@ -25,7 +25,7 @@ WeakMap 对象是一组键/值对的集合，其中的键是弱引用的。其�
 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
 
-```
+```js
 const wm1 = new WeakMap(),
 wm2 = new WeakMap(),
 wm3 = new WeakMap();
@@ -59,7 +59,7 @@ Set 对象允许你存储任何类型的唯一值，无论是原始值或者是�
 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set
 
-```
+```js
 let mySet = new Set();
 
 mySet.add(1); // Set [ 1 ]
@@ -90,7 +90,7 @@ console.log(mySet);
 
 ## 相关代码
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>

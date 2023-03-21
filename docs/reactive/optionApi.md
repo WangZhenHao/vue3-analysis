@@ -10,7 +10,7 @@
 
 createAppAPI就是接收了{data:xxx, methods:xx}的原始参数，该函数返回一个对象
 
-```
+```js
 {
     use: xxx,
     mixin: xxx,
@@ -60,8 +60,8 @@ createAppAPI就是接收了{data:xxx, methods:xx}的原始参数，该函数返�
 
 5-2. 执行`componentUpdateFn`(packages\runtime-core\src\renderer.ts)函数，执行`instance.subTree = renderComponentRoot(instance)`
 
-```
-renderComponentRoot方法执行执行render函数，生成虚拟vnode
+```js
+// renderComponentRoot方法执行执行render函数，生成虚拟vnode
       result = normalizeVNode(
         render!.call(
           proxyToUse,
@@ -73,7 +73,7 @@ renderComponentRoot方法执行执行render函数，生成虚拟vnode
           ctx
         )
       )
-这时候会触发get方法，对activeEffect进行收集
+// 这时候会触发get方法，对activeEffect进行收集
 ```
 5-3. 生成vnode值，就会触发proxy的createGetter->get()方法(packages\reactivity\src\baseHandlers.ts)，执行`track()`方法收集依赖packages\reactivity\src\effect.ts
 
@@ -105,7 +105,7 @@ depsMap.set(key, (dep = createDep()))
 ## 多次触发data的值，如何只更新一次视图
 
 1. 定义new ReactiveEffect渲染函数的时候（packages\runtime-core\src\renderer.ts），有一个scheduler参数
-```
+```js
 const effect = (instance.effect = new ReactiveEffect(
     componentUpdateFn,
     () => queueJob(update),
@@ -118,7 +118,7 @@ const effect = (instance.effect = new ReactiveEffect(
 
 ## 相关代码
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>

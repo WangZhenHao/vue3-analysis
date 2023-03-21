@@ -6,7 +6,11 @@ export default defineConfig({
   outDir: '../dist',
   lang: 'en-US',
   title: 'vue3源码解析',
-  description: '直白，简单的方式去学习Vue3源码',
+  // description: '直白，简单的方式去学习Vue3源码',
+  // markdown: {
+  //   theme: 'material-theme-palenight',
+  //   lineNumbers: true,
+  // },
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
@@ -29,7 +33,7 @@ export default defineConfig({
         items: [
           { text: 'Vue渲染流程', link: '/reactive/optionApi' },
           { text: 'data响应式', link: '/reactive/data' },
-          { text: 'proxy在vue的应用', link: '/reactive/proxy' }
+          { text: 'proxy在Vue3的应用', link: '/reactive/proxy' }
         ],
       }
     ],

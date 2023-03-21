@@ -5,7 +5,7 @@
 ## 安装依赖
 
 1:该项目配置只能用pnpm安装，启动，在package.json的script中preinstall做了校验
-```
+```js
 "preinstall": "node ./scripts/preinstall.js"
 ```
 <p>
@@ -35,7 +35,7 @@
   获取TARGET文件夹的package.json的内容，既vue/pageage.json内容
 
   packageOptions = pkg.buildOptions 最终packageConfigs是一个数组
-  ```
+  ```js
     [{
         input: xxx/packges/vue/src/index.js,
         output: xxx/packges/vue/dist/vue.global.js
@@ -46,7 +46,7 @@
 注意一点的就是在入口文件import的路径别名是在tsconfig.json配置的
 配置项是：
 
-```
+```json
 "paths": {
   "@vue/*": ["packages\/*\/src"],
   "vue": ["packages/vue/src"]

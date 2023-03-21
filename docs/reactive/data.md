@@ -26,7 +26,7 @@
 -  dep类似数组，存储渲染函数
 
 这时候会得到一个类似的对象
-```
+```js
 targetMap = {
     {msg: 'hello vue'}: {
        msg: [ReactiveEffect2]
@@ -42,7 +42,7 @@ targetMap = {
 - 添加依赖dep.add(activeEffect!)
 
 这时候会得到一个类似的对象
-```
+```js
 targetMap = {
     {msg: 'hello vue'}: {
     msg: [ReactiveEffect2],
@@ -58,7 +58,7 @@ packages\reactivity\src\baseHandlers.ts-> createSetter(shallow = false)
 
 3-1. 执行`const result = Reflect.set(target, key, value, receiver)`对form对象设新的键值，form这时候变成了
 
-```
+```js
 form: { 
     msg:"hello vue",
     text: "add-text"
@@ -67,7 +67,7 @@ form: {
 3-2. hadkey为false,执行 `trigger(target, TriggerOpTypes.ADD, key, value)`
 
 3-3. 由于依赖收集对象targetMap是弱引用，这时候
-```
+```js
 targetMap = {
 {msg: 'hello vue', text: 'change'}: {
     msg: [ReactiveEffect2],
@@ -98,7 +98,7 @@ deps里面，key有text， deps这时候就是[ReactiveEffect2]了
 
 ## 相关代码
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -5,7 +5,7 @@
 通过Vue3源码的抽丝剥茧，整理一个简单的应用，通过修改对象属性，实现html页面的更新
 
 ## 实例代码
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 
