@@ -1,0 +1,1 @@
+import{_ as s,c as n,o as a,N as l}from"./chunks/framework.7c29c9c7.js";const i=JSON.parse('{"title":"Proxy特性在Vue3的应用","description":"","frontmatter":{},"headers":[],"relativePath":"reactive/proxy.md"}'),p={name:"reactive/proxy.md"},o=l("",5),e=[o];function t(c,r,y,F,D,A){return a(),n("div",null,e)}const f=s(p,[["render",t]]);export{i as __pageData,f as default};

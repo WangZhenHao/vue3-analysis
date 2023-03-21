@@ -1,0 +1,1 @@
+import{_ as s,c as n,o as a,N as p}from"./chunks/framework.7c29c9c7.js";const d=JSON.parse('{"title":"Vue渲染流程","description":"","frontmatter":{},"headers":[],"relativePath":"reactive/optionApi.md"}'),l={name:"reactive/optionApi.md"},e=p("",39),o=[e];function t(c,r,y,F,D,i){return a(),n("div",null,o)}const A=s(l,[["render",t]]);export{d as __pageData,A as default};

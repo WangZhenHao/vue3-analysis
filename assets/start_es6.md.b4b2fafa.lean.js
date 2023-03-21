@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as n,N as l}from"./chunks/framework.7c29c9c7.js";const i=JSON.parse('{"title":"es6 特性 Proxy, Set, Map","description":"","frontmatter":{},"headers":[],"relativePath":"start/es6.md"}'),p={name:"start/es6.md"},o=l("",17),e=[o];function t(c,r,y,D,F,A){return n(),a("div",null,e)}const f=s(p,[["render",t]]);export{i as __pageData,f as default};
