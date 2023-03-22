@@ -36,10 +36,10 @@ targetMap = {
 
 2-3. 当取值form.text的时候，执行track(target, TrackOpTypes.GET, key)
 
-- targetMap.set(target, (depsMap = new Map()))，target就是{msg: 'hello vue'}
-- 由于depsMaps已经有了，所以不需要重新创建，取值let dep = depsMap.get(key)，这里的key也就是text
-- 判断dep有没有，这里发现不存在，于是创建一个dep = new Set()
-- 添加依赖dep.add(activeEffect!)
+- `targetMap.set(target, (depsMap = new Map()))`，target就是`{msg: 'hello vue'}`
+- 由于depsMap已经有了，所以不需要重新创建，取值`let dep = depsMap.get(key)`，这里的key也就是text
+- 判断dep有没有，这里发现不存在，于是创建一个`dep = new Set()`
+- 添加依赖`dep.add(activeEffect!)`
 
 这时候会得到一个类似的对象
 ```js
@@ -52,7 +52,7 @@ targetMap = {
 ```
 
 3. 修改text的是`this.form.text = 'add-text'`,这个过程中会触发set方法，处理如下：
-packages\reactivity\src\baseHandlers.ts-> createSetter(shallow = false)
+packages\reactivity\src\baseHandlers.ts-> `createSetter(shallow = false)`
 
 3-0. 判断text是否存在form里面，保存布尔值变量hadKey
 
@@ -76,7 +76,7 @@ targetMap = {
 }
 ```
 
-`const depsMap = targetMap.get(target)` depsMap有值，赋值到deps.push(depsMap.get(key))
+`const depsMap = targetMap.get(target)` depsMap有值，赋值到`deps.push(depsMap.get(key))`
 
 deps里面，key有text， deps这时候就是[ReactiveEffect2]了
 
