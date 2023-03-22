@@ -1,6 +1,6 @@
-> 问题：没有在data定义属性，但是在新增一个属性的时候，是如何更新视图的呢？
+## 问题
+> 没有在data定义属性，但是在新增一个属性的时候，是如何更新视图的呢？例如：data中的form没有定义text属性，但是修改form.text的时候，却可以更新视图(看相关代码)
 
-### data中的form没有定义text属性，但是修改form.text的时候，却可以更新视图(看相关代码)
 
 1. data使用了new Proxy()封装`instance.data = reactive(data)`->packages\runtime-core\src\componentOptions.ts
 
