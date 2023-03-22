@@ -16,5 +16,5 @@ https://vitepress.dev/
 https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
 
 ### qq讨论群：475870039
-### 微信群：q群里
+### 微信群：--
 

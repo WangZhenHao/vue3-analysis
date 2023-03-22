@@ -1,6 +1,6 @@
 > 问题：没有在data定义属性，但是在新增一个属性的时候，是如何更新视图的呢？
 
-### data中的form没有定义text属性，但是修改form.text的时候，却可以更新视图
+### data中的form没有定义text属性，但是修改form.text的时候，却可以更新视图(看相关代码)
 
 1. data使用了new Proxy()封装`instance.data = reactive(data)`->packages\runtime-core\src\componentOptions.ts
 
@@ -15,13 +15,13 @@
 
 - 判断{msg: 'hello vue'},也就是form对象有没有new Map()对象，如果没有创建一个
 
-- targetMap.set(target, (depsMap = new Map()))，target就是{msg: 'hello vue'}
+- `targetMap.set(target, (depsMap = new Map()))`，target就是`{msg: 'hello vue'}`
 
 - depsMaps类似对象，存储key作为键值命
 
-- 判断let dep = depsMap.get(key) 中的dep有没有值，如果没有创建一个dep = new Set()
+- 判断`let dep = depsMap.get(key)` 中的dep有没有值，如果没有创建一个`dep = new Set()`
 
-- 添加依赖dep.add(activeEffect!) `ReactiveEffect2为渲染函数`
+- 添加依赖`dep.add(activeEffect!)` ReactiveEffect2为渲染函数
 
 -  dep类似数组，存储渲染函数
 
