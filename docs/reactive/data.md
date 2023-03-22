@@ -140,7 +140,47 @@ deps里面，key有text， deps这时候就是[ReactiveEffect2]了
 </html>
 ```
 
+## 相关代码-Map,WeakMap,Set
 
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var form = { msg: 'hllo vue' }
+
+        const targetMap = new WeakMap()
+
+        let depsMap = targetMap.get(form)
+        if(!depsMap) {
+            targetMap.set(form, (depsMap = new Map()));
+        }
+        
+        let dep = depsMap.get('msg')
+        if (!dep) {
+          depsMap.set('msg', (dep = new Set()))
+          dep.add(function ReactiveEffect() {})
+
+        //   depsMap.set('text', (dep = new Set()))
+        //   dep.add(function ReactiveEffect() {})
+        }
+
+        console.log(targetMap.get(form));
+
+        setTimeout(() => {
+            form.text = 'change'
+            // 尽管form已经变了，但是targetMap.get() 依旧可以拿到值
+            console.log(targetMap.get(form))
+        }, 1000)
+    </script>
+</body>
+</html>
+```
 
 
 
