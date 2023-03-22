@@ -88,7 +88,7 @@ deps里面，key有text， deps这时候就是[ReactiveEffect2]了
 
 3-5. 最后出发触发render函数，生成新的vnode, 渲染真实DOM
 
-### 总结：
+## 总结：
 
 能够做到上面的更新视图效果，new Proxy起到了第一层作用，
 
