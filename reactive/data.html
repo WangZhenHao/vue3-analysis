@@ -10,7 +10,7 @@
     <link rel="preload" href="/vue3-analysis/assets/inter-roman-latin.2ed14f66.woff2" as="font" type="font/woff2" crossorigin="">
   <link rel="modulepreload" href="/vue3-analysis/assets/chunks/framework.7c29c9c7.js">
   <link rel="modulepreload" href="/vue3-analysis/assets/chunks/theme.faf2ea2b.js">
-  <link rel="modulepreload" href="/vue3-analysis/assets/reactive_data.md.1664e78f.lean.js">
+  <link rel="modulepreload" href="/vue3-analysis/assets/reactive_data.md.c1e95b9e.lean.js">
   <script id="check-dark-light">(()=>{const e=localStorage.getItem("vitepress-theme-appearance")||"",a=window.matchMedia("(prefers-color-scheme: dark)").matches;(!e||e==="auto"?a:e==="dark")&&document.documentElement.classList.add("dark")})();</script>
   </head>
   <body>
@@ -74,8 +74,45 @@
 <span class="line"><span style="color:#A6ACCD;">  </span><span style="color:#89DDFF;">&lt;/</span><span style="color:#F07178;">script</span><span style="color:#89DDFF;">&gt;</span></span>
 <span class="line"><span style="color:#89DDFF;">&lt;/</span><span style="color:#F07178;">body</span><span style="color:#89DDFF;">&gt;</span></span>
 <span class="line"><span style="color:#89DDFF;">&lt;/</span><span style="color:#F07178;">html</span><span style="color:#89DDFF;">&gt;</span></span>
-<span class="line"></span></code></pre></div></div></div></main><footer class="VPDocFooter" data-v-e76d1fb6 data-v-7246529b><!--[--><!--]--><!----><div class="prev-next" data-v-7246529b><div class="pager" data-v-7246529b><a class="pager-link prev" href="/vue3-analysis/reactive/optionApi.html" data-v-7246529b><span class="desc" data-v-7246529b>Previous page</span><span class="title" data-v-7246529b>Vue渲染流程</span></a></div><div class="has-prev pager" data-v-7246529b><a class="pager-link next" href="/vue3-analysis/reactive/proxy.html" data-v-7246529b><span class="desc" data-v-7246529b>Next page</span><span class="title" data-v-7246529b>proxy在Vue3的应用</span></a></div></div></footer><!--[--><!--]--></div></div></div></div></div><!----><!--[--><!--]--></div></div>
-    <script>__VP_HASH_MAP__ = JSON.parse("{\"reactive_data.md\":\"1664e78f\",\"reactive_optionapi.md\":\"a87c8727\",\"index.md\":\"265d1f27\",\"start_contact.md\":\"0eb9cb97\",\"start_build.md\":\"aba5dd77\",\"start_es6.md\":\"b4b2fafa\",\"start_preface.md\":\"9cb96eac\",\"reactive_compostionapi.md\":\"40b87c09\",\"reactive_proxy.md\":\"070c34ed\"}")
+<span class="line"></span></code></pre></div><h2 id="相关代码-map-weakmap-set" tabindex="-1">相关代码-Map,WeakMap,Set <a class="header-anchor" href="#相关代码-map-weakmap-set" aria-label="Permalink to &quot;相关代码-Map,WeakMap,Set&quot;">​</a></h2><div class="language-"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki material-theme-palenight"><code><span class="line"><span style="color:#A6ACCD;">&lt;!DOCTYPE html&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;html lang=&quot;en&quot;&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;head&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;title&gt;Document&lt;/title&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;/head&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;body&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;script&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">        var form = { msg: &#39;hllo vue&#39; }</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        const targetMap = new WeakMap()</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        let depsMap = targetMap.get(form)</span></span>
+<span class="line"><span style="color:#A6ACCD;">        if(!depsMap) {</span></span>
+<span class="line"><span style="color:#A6ACCD;">            targetMap.set(form, (depsMap = new Map()));</span></span>
+<span class="line"><span style="color:#A6ACCD;">        }</span></span>
+<span class="line"><span style="color:#A6ACCD;">        </span></span>
+<span class="line"><span style="color:#A6ACCD;">        let dep = depsMap.get(&#39;msg&#39;)</span></span>
+<span class="line"><span style="color:#A6ACCD;">        if (!dep) {</span></span>
+<span class="line"><span style="color:#A6ACCD;">          depsMap.set(&#39;msg&#39;, (dep = new Set()))</span></span>
+<span class="line"><span style="color:#A6ACCD;">          dep.add(function ReactiveEffect() {})</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        //   depsMap.set(&#39;text&#39;, (dep = new Set()))</span></span>
+<span class="line"><span style="color:#A6ACCD;">        //   dep.add(function ReactiveEffect() {})</span></span>
+<span class="line"><span style="color:#A6ACCD;">        }</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        console.log(targetMap.get(form));</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        setTimeout(() =&gt; {</span></span>
+<span class="line"><span style="color:#A6ACCD;">            form.text = &#39;change&#39;</span></span>
+<span class="line"><span style="color:#A6ACCD;">            // 尽管form已经变了，但是targetMap.get() 依旧可以拿到值</span></span>
+<span class="line"><span style="color:#A6ACCD;">            console.log(targetMap.get(form))</span></span>
+<span class="line"><span style="color:#A6ACCD;">        }, 1000)</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;/script&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;/body&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;/html&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span></code></pre></div></div></div></main><footer class="VPDocFooter" data-v-e76d1fb6 data-v-7246529b><!--[--><!--]--><!----><div class="prev-next" data-v-7246529b><div class="pager" data-v-7246529b><a class="pager-link prev" href="/vue3-analysis/reactive/optionApi.html" data-v-7246529b><span class="desc" data-v-7246529b>Previous page</span><span class="title" data-v-7246529b>Vue渲染流程</span></a></div><div class="has-prev pager" data-v-7246529b><a class="pager-link next" href="/vue3-analysis/reactive/proxy.html" data-v-7246529b><span class="desc" data-v-7246529b>Next page</span><span class="title" data-v-7246529b>proxy在Vue3的应用</span></a></div></div></footer><!--[--><!--]--></div></div></div></div></div><!----><!--[--><!--]--></div></div>
+    <script>__VP_HASH_MAP__ = JSON.parse("{\"reactive_compostionapi.md\":\"40b87c09\",\"index.md\":\"265d1f27\",\"start_build.md\":\"aba5dd77\",\"start_contact.md\":\"0eb9cb97\",\"reactive_optionapi.md\":\"a87c8727\",\"reactive_proxy.md\":\"070c34ed\",\"start_es6.md\":\"b4b2fafa\",\"start_preface.md\":\"9cb96eac\",\"reactive_data.md\":\"c1e95b9e\"}")
 __VP_SITE_DATA__ = JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"vue3源码解析\",\"description\":\"A VitePress site\",\"base\":\"/vue3-analysis/\",\"head\":[],\"appearance\":true,\"themeConfig\":{\"nav\":[{\"text\":\"首页\",\"link\":\"/\"},{\"text\":\"文档仓库\",\"link\":\"https://github.com/WangZhenHao/vue3-analysis\"},{\"text\":\"Vue3官方仓库\",\"link\":\"https://github.com/vuejs/core\"}],\"sidebar\":[{\"text\":\"准备工作\",\"items\":[{\"text\":\"读源码步骤\",\"link\":\"/start/preface\"},{\"text\":\"Vue3项目构建流程\",\"link\":\"/start/build\"},{\"text\":\"es6的新特性\",\"link\":\"/start/es6\"},{\"text\":\"联系&讨论\",\"link\":\"/start/contact\"}]},{\"text\":\"数据驱动\",\"items\":[{\"text\":\"Vue渲染流程\",\"link\":\"/reactive/optionApi\"},{\"text\":\"data响应式\",\"link\":\"/reactive/data\"},{\"text\":\"proxy在Vue3的应用\",\"link\":\"/reactive/proxy\"},{\"text\":\"组合式函数流程\",\"link\":\"/reactive/compostionApi\"}]}]},\"locales\":{},\"scrollOffset\":90,\"cleanUrls\":false}")</script>
     
   </body>

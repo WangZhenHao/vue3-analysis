@@ -58,4 +58,41 @@ import{_ as s,c as a,o as n,N as l}from"./chunks/framework.7c29c9c7.js";const A=
 <span class="line"><span style="color:#A6ACCD;">  </span><span style="color:#89DDFF;">&lt;/</span><span style="color:#F07178;">script</span><span style="color:#89DDFF;">&gt;</span></span>
 <span class="line"><span style="color:#89DDFF;">&lt;/</span><span style="color:#F07178;">body</span><span style="color:#89DDFF;">&gt;</span></span>
 <span class="line"><span style="color:#89DDFF;">&lt;/</span><span style="color:#F07178;">html</span><span style="color:#89DDFF;">&gt;</span></span>
-<span class="line"></span></code></pre></div>`,32),e=[o];function t(c,r,D,F,y,i){return n(),a("div",null,e)}const d=s(p,[["render",t]]);export{A as __pageData,d as default};
+<span class="line"></span></code></pre></div><h2 id="相关代码-map-weakmap-set" tabindex="-1">相关代码-Map,WeakMap,Set <a class="header-anchor" href="#相关代码-map-weakmap-set" aria-label="Permalink to &quot;相关代码-Map,WeakMap,Set&quot;">​</a></h2><div class="language-"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki material-theme-palenight"><code><span class="line"><span style="color:#A6ACCD;">&lt;!DOCTYPE html&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;html lang=&quot;en&quot;&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;head&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;title&gt;Document&lt;/title&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;/head&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;body&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;script&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">        var form = { msg: &#39;hllo vue&#39; }</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        const targetMap = new WeakMap()</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        let depsMap = targetMap.get(form)</span></span>
+<span class="line"><span style="color:#A6ACCD;">        if(!depsMap) {</span></span>
+<span class="line"><span style="color:#A6ACCD;">            targetMap.set(form, (depsMap = new Map()));</span></span>
+<span class="line"><span style="color:#A6ACCD;">        }</span></span>
+<span class="line"><span style="color:#A6ACCD;">        </span></span>
+<span class="line"><span style="color:#A6ACCD;">        let dep = depsMap.get(&#39;msg&#39;)</span></span>
+<span class="line"><span style="color:#A6ACCD;">        if (!dep) {</span></span>
+<span class="line"><span style="color:#A6ACCD;">          depsMap.set(&#39;msg&#39;, (dep = new Set()))</span></span>
+<span class="line"><span style="color:#A6ACCD;">          dep.add(function ReactiveEffect() {})</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        //   depsMap.set(&#39;text&#39;, (dep = new Set()))</span></span>
+<span class="line"><span style="color:#A6ACCD;">        //   dep.add(function ReactiveEffect() {})</span></span>
+<span class="line"><span style="color:#A6ACCD;">        }</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        console.log(targetMap.get(form));</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span>
+<span class="line"><span style="color:#A6ACCD;">        setTimeout(() =&gt; {</span></span>
+<span class="line"><span style="color:#A6ACCD;">            form.text = &#39;change&#39;</span></span>
+<span class="line"><span style="color:#A6ACCD;">            // 尽管form已经变了，但是targetMap.get() 依旧可以拿到值</span></span>
+<span class="line"><span style="color:#A6ACCD;">            console.log(targetMap.get(form))</span></span>
+<span class="line"><span style="color:#A6ACCD;">        }, 1000)</span></span>
+<span class="line"><span style="color:#A6ACCD;">    &lt;/script&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;/body&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;">&lt;/html&gt;</span></span>
+<span class="line"><span style="color:#A6ACCD;"></span></span></code></pre></div>`,34),e=[o];function t(c,r,D,y,F,i){return n(),a("div",null,e)}const d=s(p,[["render",t]]);export{A as __pageData,d as default};
