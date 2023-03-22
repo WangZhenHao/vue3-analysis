@@ -17,7 +17,7 @@
 
 - `targetMap.set(target, (depsMap = new Map()))`，target就是`{msg: 'hello vue'}`
 
-- depsMaps类似对象，存储key作为键值命
+- depsMap类似对象，存储key作为键值命
 
 - 判断`let dep = depsMap.get(key)` 中的dep有没有值，如果没有创建一个`dep = new Set()`
 
