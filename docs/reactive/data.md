@@ -142,7 +142,7 @@ deps里面，key有text， deps这时候就是[ReactiveEffect2]了
 
 ## 相关代码-Map,WeakMap,Set
 
-```js
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
