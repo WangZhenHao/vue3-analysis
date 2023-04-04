@@ -26,7 +26,7 @@ createAppAPI就是接收了{data:xxx, methods:xx}的原始参数，该函数返�
 
 `app.mount` 被重写，获取根节点，判断`app._compnent`是不是函数，有没有`render函数`，template属性有没有值。如果都是否，就把html内容赋值到`app._compnent.template = container.innerHTML`
 
-4-1. 之后执行`createAppAPI.mount()方法`packages\runtime-core\src\apiCreateApp.ts，由于改方法缓存了rootComponent属性，所有可以直接引用该属性， 执行createVnode方法，执行`render()`方法
+4-1. 之后执行`createAppAPI.mount()方法`packages\runtime-core\src\apiCreateApp.ts，由于改方法缓存了rootComponent属性，所有可以直接引用该属性， 执行createVnode方法，执行`render(vnode, rootContainer, isSVG)`方法
 
 该`render`方法是packages\runtime-core\src\renderer.ts的`baseCreateRenderer的render`方法的传参
 

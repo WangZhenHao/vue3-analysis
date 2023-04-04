@@ -90,10 +90,12 @@ deps里面，key有text， deps这时候就是[ReactiveEffect2]了
 
 ## 和Vue2的区别
 1: Object.defineProperty 无法检测属性的新增
+
 2：Vue2需要对数组方法进行重写
-3：依赖收集的方式不一样，
+
+3：依赖收集的方式不一样
   - Vu3是全局变量通过WeakMap, Map, Set来收集
-  - 定义Dep对象, 通过闭包收集依赖
+  - Vue2定义Dep对象, 通过闭包收集依赖
   
 ```js
 // Vue2 响应式实现
