@@ -4,7 +4,7 @@
 
 - 讲述vue3项目搭建，实现原理，列举简单案例，了解原理之后，开发的事情，将会变得很简单
 
-![demo](https://github.com/WangZhenHao/vue3-analysis/raw/master/docs/.vitepress/1.jpg)
+![demo](https://github.com/WangZhenHao/vue3-analysis/raw/master/docs/.vitepress/public/1.jpg)
 
 ## 文档地址
 https://wangzhenhao.github.io/vue3-analysis/
