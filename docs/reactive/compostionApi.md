@@ -65,7 +65,7 @@
    - 2）然后执行finishComponentSetup->`finishComponentSetup(instance, isSSR)`
 
    - 2-1）finishComponentSetup做了一个非常重要的事情，就是添加了代理proxy
-      `i.withProxy = new Proxy(i.ctx， RuntimeCompiledPublicInstanceProxyHandlers)`->packages\runtime-core\src\component.ts
+      `i.withProxy = new Proxy(i.ctx, RuntimeCompiledPublicInstanceProxyHandlers)`->packages\runtime-core\src\component.ts
     
   - 2-2）withProxy属性就有了所有访问`i.ctx`内容的能力，在执行render函数的时候
                  可以取到setup返回的值
@@ -102,9 +102,11 @@ compistionApi感觉就是为了代码更好维护，暴露出关键的数据，�
 传入的值作为参数，赋值到`this._value = __v_isShallow ? value : toReactive(value)`
   - 类createRef定义了`get value()` {}函数，this.value就是返回this._value
 
-  - 调用取值的时候调用get value() {}方法，会触发渲染函数依赖的收集
+  - 调用取值的时候调用mutableHandlers.get方法，进行依赖的搜集
 
-  - set value() {}方法,会在设置值的时候，会触发渲染函数的执行
+  - 修改值的时候，触发mutableHandlers.set方法，触发依赖函数的执行，更新视图
+
+  - ref()创建值，内部也是执行reactive()方法，来设置修改set，get操作符
 
 2. setup在Vue初始化的时候，会执行，在handleSetupResult函数里面，执行了一个非常重要函数`instance.setupState = proxyRefs(setupResult)`
     函数proxyRefs->packages\reactivity\src\ref.ts

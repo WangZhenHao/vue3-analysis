@@ -158,6 +158,98 @@ export function defineReactive (
     }
   })
 }
+
+```
+
+```js
+// Vue3响应式原理-依赖收集
+export const targetMap = new WeakMap<any, KeyToDepMap>()
+
+function createGetter(isReadonly = false, shallow = false) {
+  return function get(target: Target, key: string | symbol, receiver: object) {
+    // debugger
+    if (key === ReactiveFlags.IS_REACTIVE) {
+      return !isReadonly
+    } else if (key === ReactiveFlags.IS_READONLY) {
+      return isReadonly
+    } else if (key === ReactiveFlags.IS_SHALLOW) {
+      return shallow
+    } else if (
+      key === ReactiveFlags.RAW &&
+      receiver ===
+        (isReadonly
+          ? shallow
+            ? shallowReadonlyMap
+            : readonlyMap
+          : shallow
+          ? shallowReactiveMap
+          : reactiveMap
+        ).get(target)
+    ) {
+      return target
+    }
+
+    const targetIsArray = isArray(target)
+
+    if (!isReadonly) {
+      if (targetIsArray && hasOwn(arrayInstrumentations, key)) {
+        return Reflect.get(arrayInstrumentations, key, receiver)
+      }
+      if (key === 'hasOwnProperty') {
+        return hasOwnProperty
+      }
+    }
+
+    const res = Reflect.get(target, key, receiver)
+
+    if (isSymbol(key) ? builtInSymbols.has(key) : isNonTrackableKeys(key)) {
+      return res
+    }
+
+    if (!isReadonly) {
+      track(target, TrackOpTypes.GET, key)
+    }
+
+    if (shallow) {
+      return res
+    }
+
+    if (isRef(res)) {
+      // ref unwrapping - skip unwrap for Array + integer key.
+      return targetIsArray && isIntegerKey(key) ? res : res.value
+    }
+
+    if (isObject(res)) {
+      // Convert returned value into a proxy as well. we do the isObject check
+      // here to avoid invalid value warning. Also need to lazy access readonly
+      // and reactive here to avoid circular dependency.
+      return isReadonly ? readonly(res) : reactive(res)
+    }
+
+    return res
+  }
+}
+
+export function track(target: object, type: TrackOpTypes, key: unknown) {
+  // debugger
+  if (shouldTrack && activeEffect) {
+    let depsMap = targetMap.get(target)
+    if (!depsMap) {
+      targetMap.set(target, (depsMap = new Map()))
+    }
+    let dep = depsMap.get(key)
+    if (!dep) {
+      depsMap.set(key, (dep = createDep()))
+    }
+
+    const eventInfo = __DEV__
+      ? { effect: activeEffect, target, type, key }
+      : undefined
+
+    trackEffects(dep, eventInfo)
+    // console.log(key, targetMap)
+  }
+}
 ```
 
 ## 总结

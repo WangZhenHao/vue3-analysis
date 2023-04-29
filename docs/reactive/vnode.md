@@ -64,11 +64,17 @@ setupRenderEffect(
 - 其中`finishComponentSetup`函数,对ctx进行处理，是的实例在执行render函数的时候可以访问data, methods等等， RuntimeCompiledPublicInstanceProxyHandlers
   函数定一个了set,get,has方式，用于对变量的预处理
 ```js
+
+installWithProxy = i => {
+    if (i.render!._rc) {
+        i.withProxy = new Proxy(i.ctx, RuntimeCompiledPublicInstanceProxyHandlers)
+    }
+}
+
 if (installWithProxy) {
     installWithProxy(instance)
 }
 
-i.withProxy = new Proxy(i.ctx, RuntimeCompiledPublicInstanceProxyHandlers)
 ```
 
 - `setupComponent`做好了所有的准备工作，接着就是执行`setupRenderEffect`
