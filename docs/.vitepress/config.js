@@ -40,6 +40,13 @@ export default defineConfig({
           { text: 'render函数', link: '/reactive/render' }
         ],
       },
+      {
+        text: 'Vue的api解读',
+        item: [
+          { text: 'ref', link: '/property/ref' },
+          { text: 'watch', link: '/property/ref' },
+        ]
+      }
     ],
   },
 });
