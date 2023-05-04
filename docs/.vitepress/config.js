@@ -44,7 +44,7 @@ export default defineConfig({
         text: 'Vue的api解读',
         item: [
           { text: 'ref', link: '/property/ref' },
-          { text: 'watch', link: '/property/ref' },
+          { text: 'watch', link: '/property/watch' },
         ]
       }
     ],
