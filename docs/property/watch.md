@@ -229,55 +229,6 @@ watch(() => test.value, () => {})
 watch(react, () => {})
 ```
 
-## 案例一
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <script src="../../dist/vue.global.js"></script>
-</head>
-<body>
-  <div id="app">
-  </div>
-  <script>  
-    var { createApp, ref, watch  } = Vue;
-
-    var app = createApp({
-        setup() {
-            var test = ref({});
-
-
-            setTimeout(() => {
-              test.value = { name: 1 }
-            }, 3000)
-
-            watch(test.value, () => {
-              console.log(test.value)
-            })
-
-            return {
-                test,
-            }
-        }
-    })
-    app.mount('#app')
-
-  </script>
-  <script>
-  </script>
-</body>
-</html>
-```
-> watch做了什么？
-
-
-
-
-## watch不生效的场景
 
 
 ## 相关代码
