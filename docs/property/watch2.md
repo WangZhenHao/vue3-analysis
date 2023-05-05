@@ -173,6 +173,9 @@ function ownKeys(target: object): (string | symbol)[] {
 - test.value.Symbol(iterate) 收集到activeEffect ，这个Symbol(iterate)属性用重要，后面新加的键值会用到这个
 
 
-6：执行到setTimeout，给空对象赋值
+6：执行到setTimeout，给空对象赋值，触发ref对象中的`get value`方法, 执行依赖收集`trackRefValue(this)` 
+  因为`activeEffect`为空，所以不执行
+6-1：接着就开始赋值了test.value.name = 1, 会先触发`packages\reactivity\src\baseHandlers.ts`的set操作符
+
 
 ## watch不生效的场景
