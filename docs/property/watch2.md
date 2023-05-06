@@ -22,7 +22,7 @@
             var test = ref({});
 
 
-            setInterval(() => {
+            setTimeout(() => {
               test.value.name = 1
             }, 3000)
 
@@ -175,7 +175,106 @@ function ownKeys(target: object): (string | symbol)[] {
 
 6：执行到setTimeout，给空对象赋值，触发ref对象中的`get value`方法, 执行依赖收集`trackRefValue(this)` 
   因为`activeEffect`为空，所以不执行
-6-1：接着就开始赋值了test.value.name = 1, 会先触发`packages\reactivity\src\baseHandlers.ts`的set操作符
+6-1：接着就开始赋值了`test.value.name = 1`, 会先触发`packages\reactivity\src\baseHandlers.ts`的set操作符
+
+- 因为是新增了一个name属性，所有执行`trigger(target, TriggerOpTypes.ADD, key, value)`
+
+- 接着就开始执行寻找test.value的依赖，发现有依赖
+
+<p>
+  <img src="../.vitepress/public/property/watch.jpg" alt="vitepress init screenshot" style="border-radius:8px">
+</p>
+
+- 获取name的依赖，发现没有, 因为是新增的属性，所有depsMap对象肯定是不存在name键值依赖的
+  所有就判断type类型是新增属性`TriggerOpTypes.ADD`
+  
+```js
+if (key !== void 0) {
+  deps.push(depsMap.get(key))
+}
+
+switch (type) {
+  case TriggerOpTypes.ADD:
+    if (!isArray(target)) {
+      deps.push(depsMap.get(ITERATE_KEY))
+      if (isMap(target)) {
+        deps.push(depsMap.get(MAP_KEY_ITERATE_KEY))
+      }
+    } else if (isIntegerKey(key)) {
+      // new index added to array -> length changes
+      deps.push(depsMap.get('length'))
+    }
+    break
+  case TriggerOpTypes.DELETE:
+    if (!isArray(target)) {
+      deps.push(depsMap.get(ITERATE_KEY))
+      if (isMap(target)) {
+        deps.push(depsMap.get(MAP_KEY_ITERATE_KEY))
+      }
+    }
+    break
+  case TriggerOpTypes.SET:
+    if (isMap(target)) {
+      deps.push(depsMap.get(ITERATE_KEY))
+    }
+    break
+}
+```
+
+- 把test.value的值依赖找出来,插入到`deps.push(depsMap.get(ITERATE_KEY))`
+  
+`ITERATE_KEY` 这个是执行`traverse`中的`for in` 语句,触发了ownKeys函数产生的
+
+```js
+// packages\reactivity\src\baseHandlers.ts
+function ownKeys(target: object): (string | symbol)[] {
+  track(target, TrackOpTypes.ITERATE, isArray(target) ? 'length' : ITERATE_KEY)
+  return Reflect.ownKeys(target)
+}
+```
+
+7: 触发name的设置，就找到了test.value收集的`activeEffect`依赖，插入数组deps中
+```js
+deps.push(depsMap.get(ITERATE_KEY))
+```
+
+8: 开始遍历deps数组，触发依赖的执行, 最终执行回调函数
+```js
+function triggerEffect(
+  effect: ReactiveEffect,
+  debuggerEventExtraInfo?: DebuggerEventExtraInfo
+) {
+  if (effect !== activeEffect || effect.allowRecurse) {
+    if (__DEV__ && effect.onTrigger) {
+      effect.onTrigger(extend({ effect }, debuggerEventExtraInfo))
+    }
+    if (effect.scheduler) {
+      effect.scheduler()
+    } else {
+      effect.run()
+    }
+  }
+}
+
+// 执行回调
+callWithAsyncErrorHandling(cb, instance, ErrorCodes.WATCH_CALLBACK, [
+  newValue,
+  // pass undefined as the old value when it's changed for the first time
+  oldValue === INITIAL_WATCHER_VALUE
+    ? undefined
+    : isMultiSource && oldValue[0] === INITIAL_WATCHER_VALUE
+    ? []
+    : oldValue,
+  onCleanup
+])
+```
+
+## 案例一总结
+这些监听响应式值的写法，会自动帮你把deep设置为true, 也就是深度监听；
+会执行`traverse(baseGetter())`, 深度遍历，触发属性的get，收集依赖
+在新增键值的时候，会拿父级的依赖`depsMap.get(ITERATE_KEY)`, 里面所有的依赖
+执行依赖的更新，从而执行watch的回到函数
+
 
 
 ## watch不生效的场景
