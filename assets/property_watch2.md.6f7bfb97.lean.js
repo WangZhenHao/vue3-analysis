@@ -1,1 +1,0 @@
-import{_ as s,c as a,o as n,N as l}from"./chunks/framework.7c29c9c7.js";const C=JSON.parse('{"title":"watch案例","description":"","frontmatter":{},"headers":[],"relativePath":"property/watch2.md"}'),p={name:"property/watch2.md"},o=l("",26),e=[o];function t(c,r,F,y,D,i){return n(),a("div",null,e)}const d=s(p,[["render",t]]);export{C as __pageData,d as default};
