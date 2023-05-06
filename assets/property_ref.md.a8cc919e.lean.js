@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as l,N as n}from"./chunks/framework.7c29c9c7.js";const C=JSON.parse('{"title":"ref方法如何收集依赖，如何触发视图的更新？","description":"","frontmatter":{},"headers":[],"relativePath":"property/ref.md"}'),p={name:"property/ref.md"},o=n("",10),e=[o];function t(c,r,y,F,D,i){return l(),a("div",null,e)}const d=s(p,[["render",t]]);export{C as __pageData,d as default};
