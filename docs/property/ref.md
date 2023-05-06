@@ -42,6 +42,7 @@ set value(newVal) {
 ref的属性有一个内部也是执行reactive方法，只用的时候，通过value取值`xx.value`，通过vulue设值`xx.value=xx`。这样子的好处就是
 直接赋值value，可以重新定义对象的响应式属性，而且也会触发依赖更新，重新收集新对象的依赖
 
+## 相关代码
 ```js
 var { ref, reactive } = Vue
 

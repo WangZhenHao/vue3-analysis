@@ -1,6 +1,6 @@
 # watch案例
 
-## 案例一
+## 案例一：最常见用法
 
 ```html
 <!DOCTYPE html>
@@ -273,8 +273,172 @@ callWithAsyncErrorHandling(cb, instance, ErrorCodes.WATCH_CALLBACK, [
 这些监听响应式值的写法，会自动帮你把deep设置为true, 也就是深度监听；
 会执行`traverse(baseGetter())`, 深度遍历，触发属性的get，收集依赖
 在新增键值的时候，会拿父级的依赖`depsMap.get(ITERATE_KEY)`, 里面所有的依赖
-执行依赖的更新，从而执行watch的回到函数
+执行依赖的更新，从而执行watch的回调函数
 
 
 
-## watch不生效的场景
+## 案例二：watch不生效的场景
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../../dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+  </div>
+  <script>  
+    var { createApp, ref, watch, onMounted  } = Vue;
+
+    var app = createApp({
+        setup() {
+            var test = ref({});
+
+            onMounted(() => {
+              test.value = { name: 1 }
+            })
+
+            setInterval(() => {
+              test.value.name++
+            }, 3000)
+
+            watch(test.value, () => {
+              debugger
+            })
+
+            return {
+                test,
+            }
+        }
+    })
+    app.mount('#app')
+
+  </script>
+  <script>
+  </script>
+</body>
+</html>
+```
+
+> 上面的代码执行完之后，会发现不执行watch里面的回调函数了，这是为什么呢？
+
+1：定义ref类型的响应式`var test = ref({})`, 如何开始执行`watch(test.value, cb)`函数
+
+2: 这时候触发了test.value，也就是ref中的`get value()`方法，该方法会执行`trackRefValue(this)`
+
+```js
+export function trackRefValue(ref: RefBase<any>) {
+  if (shouldTrack && activeEffect) {
+    ref = toRaw(ref)
+    if (__DEV__) {
+      trackEffects(ref.dep || (ref.dep = createDep()), {
+        target: ref,
+        type: TrackOpTypes.GET,
+        key: 'value'
+      })
+    } else {
+      trackEffects(ref.dep || (ref.dep = createDep()))
+    }
+  }
+}
+```
+
+- 就是为当前ref实例，收集依赖，但是发现`shouldTrack`为false, `activeEffect`为undefined,所以不执行后面的逻辑
+
+3：触发ref的`get value()` 方法之后,开始执行watch函数了
+
+3-1: test.value是响应式属性，所以`isReactive(source)`为true， deep为true
+    如何包裹一层函数
+```js
+if (cb && deep) {
+  const baseGetter = getter
+  getter = () => traverse(baseGetter())
+}
+```
+
+4: 然后实例化构造函数`const effect = new ReactiveEffect(getter, scheduler)`， 执行`effect.run()`
+
+执行`getter = () => traverse(baseGetter())` 为test.value里面的属性搜集`ReactiveEffect`依赖
+
+5: onMounted之后，直接替换test.value的值，触发了`set value()`方法
+
+5-1：对新设置的值，重新定义proxy响应式属性`toReactive(newVal)`
+
+  并且触发`triggerRefValue(this, newVal)`, 触发依赖的执行
+
+```js
+set value(newVal) {
+    const useDirectValue =
+      this.__v_isShallow || isShallow(newVal) || isReadonly(newVal)
+
+    newVal = useDirectValue ? newVal : toRaw(newVal)
+    if (hasChanged(newVal, this._rawValue)) {
+      this._rawValue = newVal
+      this._value = useDirectValue ? newVal : toReactive(newVal)
+      triggerRefValue(this, newVal)
+    }
+}
+```
+
+但是`get value()`的时候，没有收集到`ReactiveEffect`，所以执行`triggerRefValue(this, newVal)`
+的时候，没有执行到watch的回调函数
+
+
+6：后面执行setInterval对test.value进行赋值的时候，也没有更新watch的回调，因为`set value()`的时候
+ 重新执行了一次`toReactive(newVal)` 原来收集的已经失效了
+
+### 7：解决方法
+```js
+
+// 方法一
+watch(() => test.value, () => {
+  debugger
+}, { deep: true })
+
+// 方法二
+watch(test, () => {
+  debugger
+}, { deep: true })
+
+```
+
+这个写法，不会一开始就触发ref实例的`get value()`方法, 而是在创建
+`const effect = new ReactiveEffect(getter, scheduler)` ，执行effect.run()
+的时候，触发`get value()`方法，搜集依赖
+
+
+7-1：当对test.value赋值的时候，触发`set value()`方法，就可以触发`triggerRefValue(this, newVal)`
+执行依赖，从而可以再次对新的值，重新搜集依赖
+
+
+## 案例二总结
+
+普通的写法进行监听，对ref的值进行赋值，既：test.value = { name: 1 }，在`get vlaue()`的时候，没有收集
+到watch的依赖，在触发`set value()`的时候，就没有再行watch了
+
+而加了函数包裹test.value，在执行`effect.run()`的时候，才会触发ref的`get value()`, 从而可以执行t`rackRefValue(this)`收集到依赖
+```js
+watch(() => test.value, () => {
+  debugger
+}, { deep: true })
+
+export function trackRefValue(ref: RefBase<any>) {
+  if (shouldTrack && activeEffect) {
+    ref = toRaw(ref)
+    if (__DEV__) {
+      trackEffects(ref.dep || (ref.dep = createDep()), {
+        target: ref,
+        type: TrackOpTypes.GET,
+        key: 'value'
+      })
+    } else {
+      trackEffects(ref.dep || (ref.dep = createDep()))
+    }
+  }
+}
+```
+再触发`set value()`的时候，也就可以重新触发`effect.run()`了

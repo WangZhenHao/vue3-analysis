@@ -71,7 +71,7 @@ ref对象的`get value() {}`方法
 - 上述几种情况都不存在，赋值`getter = NOOP`, 赋值一个空函数
 
 
-3：如果有回到函数和deep为true，就会对getter再次进行封装一层
+3：如果有回调函数和deep为true，就会对getter再次进行封装一层
 
 ```js
 if (cb && deep) {
@@ -108,7 +108,7 @@ export function traverse(value: unknown, seen?: Set<unknown>) {
 }
 
 ```
-它就是递归获取对象值，让每一个属性都可以收集watch依赖，也就是可以执行生成递归的核心步骤
+`traverse`是递归获取对象值，让每一个属性都可以收集watch依赖，也就是可以深度监听值的核心步骤
 
 4：定义job函数，该函数会传入scheduler里面，作为异步队列执行的函数
 
