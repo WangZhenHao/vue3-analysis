@@ -68,7 +68,7 @@ export function trackRefValue(ref: RefBase<any>) {
 }
 ```
 
-应为activeEffect为空，所有不执行依赖的收集
+这里因为activeEffect为空，所有不执行依赖的收集
 
 3：执行`return doWatch(source as any, cb, options)` 
 
@@ -175,9 +175,10 @@ function ownKeys(target: object): (string | symbol)[] {
 
 6：执行到setTimeout，给空对象赋值，触发ref对象中的`get value`方法, 执行依赖收集`trackRefValue(this)` 
   因为`activeEffect`为空，所以不执行
+  
 6-1：接着就开始赋值了`test.value.name = 1`, 会先触发`packages\reactivity\src\baseHandlers.ts`的set操作符
 
-- 因为是新增了一个name属性，所有执行`trigger(target, TriggerOpTypes.ADD, key, value)`
+- 因为是新增了一个name属性，所以执行`trigger(target, TriggerOpTypes.ADD, key, value)`
 
 - 接着就开始执行寻找test.value的依赖，发现有依赖
 
@@ -221,7 +222,7 @@ switch (type) {
 }
 ```
 
-- 把test.value的值依赖找出来,插入到`deps.push(depsMap.get(ITERATE_KEY))`
+- 把test.value的值依赖找出来,插入到数组中 `deps.push(depsMap.get(ITERATE_KEY))`
   
 `ITERATE_KEY` 这个是执行`traverse`中的`for in` 语句,触发了ownKeys函数产生的
 
@@ -270,7 +271,7 @@ callWithAsyncErrorHandling(cb, instance, ErrorCodes.WATCH_CALLBACK, [
 ```
 
 ## 案例一总结
-这些监听响应式值的写法，会自动帮你把deep设置为true, 也就是深度监听；
+这种监听响应式值的写法，会自动帮你把deep设置为true, 也就是深度监听；
 会执行`traverse(baseGetter())`, 深度遍历，触发属性的get，收集依赖
 在新增键值的时候，会拿父级的依赖`depsMap.get(ITERATE_KEY)`, 里面所有的依赖
 执行依赖的更新，从而执行watch的回调函数
@@ -326,7 +327,7 @@ callWithAsyncErrorHandling(cb, instance, ErrorCodes.WATCH_CALLBACK, [
 
 > 上面的代码执行完之后，会发现不执行watch里面的回调函数了，这是为什么呢？
 
-1：定义ref类型的响应式`var test = ref({})`, 如何开始执行`watch(test.value, cb)`函数
+1：定义ref类型的响应式`var test = ref({})`, 然后开始执行`watch(test.value, cb)`函数
 
 2: 这时候触发了test.value，也就是ref中的`get value()`方法，该方法会执行`trackRefValue(this)`
 
@@ -389,7 +390,7 @@ set value(newVal) {
 
 
 6：后面执行setInterval对test.value进行赋值的时候，也没有更新watch的回调，因为`set value()`的时候
- 重新执行了一次`toReactive(newVal)` 原来收集的已经失效了
+ 重新执行了一次`toReactive(newVal)` 之前收集的依赖已经失效了
 
 ### 7：解决方法
 ```js
@@ -411,7 +412,7 @@ watch(test, () => {
 的时候，触发`get value()`方法，搜集依赖
 
 
-7-1：当对test.value赋值的时候，触发`set value()`方法，就可以触发`triggerRefValue(this, newVal)`
+7-1：当对`test.value = {name: 1}`赋值的时候，触发`set value()`方法，就可以触发`triggerRefValue(this, newVal)`
 执行依赖，从而可以再次对新的值，重新搜集依赖
 
 
