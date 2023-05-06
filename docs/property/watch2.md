@@ -325,7 +325,7 @@ callWithAsyncErrorHandling(cb, instance, ErrorCodes.WATCH_CALLBACK, [
 </html>
 ```
 
-> 上面的代码执行完之后，会发现不执行watch里面的回调函数了，这是为什么呢？
+> 上面的代码在对ref实例赋值完之后。既：`test.value = { name: 1 }`，会发现不执行watch里面的回调函数了，这是为什么呢？
 
 1：定义ref类型的响应式`var test = ref({})`, 然后开始执行`watch(test.value, cb)`函数
 
@@ -404,6 +404,38 @@ watch(() => test.value, () => {
 watch(test, () => {
   debugger
 }, { deep: true })
+
+
+// 方法三, 在test.value赋值之后执行watch
+var { createApp, ref, watch, onMounted  } = Vue;
+
+    var app = createApp({
+        setup() {
+            var test = ref({});
+
+            onMounted(() => {
+              test.value = { name: 1 }
+
+              watch(test.value, () => {
+                debugger
+              })
+
+            })
+
+            setInterval(() => {
+              test.value.name++
+            }, 3000)
+
+            // watch(test.value, () => {
+            //   debugger
+            // })
+
+            return {
+                test,
+            }
+        }
+    })
+app.mount('#app')
 
 ```
 
