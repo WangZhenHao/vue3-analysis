@@ -5,6 +5,13 @@
 2. 注意第二个参数是__v_isShallow = false，标识`this._value = __v_isShallow ? value : toReactive(value)`
    - 也就是说ref执行的构造函数，传的值需要执行响应式
 
+2-1: `toReactive`会对value进行判断，如果是一个对象，就会执行`reactive`, 执行响应式操作，设置get,set
+```js
+export const toReactive = <T extends unknown>(value: T): T =>
+  isObject(value) ? reactive(value) : value
+```
+
+
 3. ref定义了`get value`，和`set value`操作符，
 
 4. 执行完之后，通过value取值，渲染目标的时候，就会取值value,顺便收集改渲染函数作为依赖
