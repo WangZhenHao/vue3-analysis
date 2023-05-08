@@ -1,1 +1,0 @@
-import{_ as s,c as a,o as n,N as l}from"./chunks/framework.7c29c9c7.js";const A=JSON.parse('{"title":"reactive解读","description":"","frontmatter":{},"headers":[],"relativePath":"property/reactive.md"}'),p={name:"property/reactive.md"},o=l("",23),e=[o];function t(c,r,y,F,D,i){return n(),a("div",null,e)}const d=s(p,[["render",t]]);export{A as __pageData,d as default};
