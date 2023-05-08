@@ -40,14 +40,6 @@ if (!isObject(target)) {
 }
 ```
 
-```js
-if (!isObject(target)) {
-    if (__DEV__) {
-        console.warn(`value cannot be made reactive: ${String(target)}`)
-    }
-    return target
-}
-```
 2-2: 判断传入对象是属于什么类型，如果不是`Object,Array,Map,Set,WeakMap,WeakSet`
 会中断下面流程，返回target
 
@@ -83,13 +75,13 @@ const proxy = new Proxy(
 proxyMap.set(target, proxy)
 return proxy
 ```
-- 判断target的类型是否M`Map,Set,WeakMap,WeakSet`, 如果是 使用`collectionHandlers`，否则
+- 判断target的类型是否`Map,Set,WeakMap,WeakSet`, 如果是 使用`collectionHandlers`，否则
 使用`baseHandlers`
 
 - `collectionHandlers` 是对Map,Set,WeakMap,WeakSet类型进行处理
-   该函数定义了`get,get size,has, add, set, delete, clear,forEach, keys, values, entrires, Symbol.iterator`
+   该函数定义了`get, get size, has, add, set, delete, clear,forEach, keys, values, entrires, Symbol.iterator`
    
-   里面就会涉及到依赖的收集和依赖执行的函数，可以看到Map,Set,WeakMap,WeakSet，处理的东西比简单的Object, Array简单很多
+   里面就会涉及到依赖的收集和依赖执行的函数，可以看到Map,Set,WeakMap,WeakSet，处理的东西比Object, Array复杂很多
 ```js
 export const mutableCollectionHandlers: ProxyHandler<CollectionTypes> = {
   get: /*#__PURE__*/ createInstrumentationGetter(false, false)
@@ -128,8 +120,8 @@ function createInstrumentationGetter(isReadonly: boolean, shallow: boolean) {
 }
 
 ```
-- `baseHandles` 定义了`get, set,has，deleteProperty，ownKeys`->packages\reactivity\src\baseHandlers.ts
-  这个就是就是响应式的核心代码，是的对象取值，设值，都会走
+- `baseHandles` 定义了`get, set,has，deleteProperty，ownKeys`packages\reactivity\src\baseHandlers.ts
+  这个就是就是响应式的代码，是的对象取值，设值，都会走
   里面的方法
 ```js
 export const mutableHandlers: ProxyHandler<object> = {
@@ -143,7 +135,7 @@ export const mutableHandlers: ProxyHandler<object> = {
 
 ## reactive和ref的关系
 
-- ref是一个构造函数，通过`get value`取值, `set value`设置值，内部实现的属性响应式是调用`reactive`方法
+- ref是一个构造函数，通过`get value`取值, `set value`设值，内部实现的属性响应式是调用`reactive`方法
 
 - ref的好处是可以设置基本类型`number, string, boolean`和对象
 但是reactive只能设置对象作为一个响应式属性，如果是基本类型数据，不做处理
