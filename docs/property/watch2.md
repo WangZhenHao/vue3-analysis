@@ -352,14 +352,28 @@ export function trackRefValue(ref: RefBase<any>) {
 
 3：触发ref的`get value()` 方法之后,开始执行watch函数了
 
-3-1: test.value是响应式属性，所以`isReactive(source)`为true， deep为true
-    如何包裹一层函数
+
+3-1: 传入的`test.value`是响应式属性，所以`isReactive(source)`为true, 所以定义`getter`函数，并且deep为true
 ```js
+// 定义getter
+let getter: () => any
+if (isRef(source)) {
+    getter = () => source.value
+    forceTrigger = isShallow(source)
+  } else if (isReactive(source)) {
+    getter = () => source
+    deep = true
+} 
+
+// 对getter再进行一次处理
 if (cb && deep) {
   const baseGetter = getter
   getter = () => traverse(baseGetter())
 }
 ```
+
+- 因为定义了回调函数和deep为true,所以对getter函数再进行处理
+
 
 4: 然后实例化构造函数`const effect = new ReactiveEffect(getter, scheduler)`， 执行`effect.run()`
 
@@ -401,12 +415,17 @@ watch(() => test.value, () => {
 }, { deep: true })
 
 // 方法二
+watch(() => test, () => {
+  debugger
+}, { deep: true })
+
+// 方法三
 watch(test, () => {
   debugger
 }, { deep: true })
 
 
-// 方法三, 在test.value赋值之后执行watch
+// 方法四, 在test.value赋值之后执行watch
 var { createApp, ref, watch, onMounted  } = Vue;
 
     var app = createApp({
@@ -453,7 +472,10 @@ app.mount('#app')
 普通的写法进行监听，对ref的值进行赋值，既：test.value = { name: 1 }，在`get vlaue()`的时候，没有收集
 到watch的依赖，在触发`set value()`的时候，就没有再行watch了
 
-而加了函数包裹test.value，在执行`effect.run()`的时候，才会触发ref的`get value()`, 从而可以执行t`rackRefValue(this)`收集到依赖
+而加了函数包裹ref数据类型且设置`deep为true`，在执行`effect.run()`的时候，会触发ref的`get value()`, 从而可以执行`trackRefValue(this)`收集到依赖
+
+总的来说，深度监听可以去解决，`值被覆盖之后`，失去原来的依赖，能够重新收集，执行watch回调
+
 ```js
 watch(() => test.value, () => {
   debugger

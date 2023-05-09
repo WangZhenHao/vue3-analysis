@@ -1,6 +1,6 @@
 # Vue渲染流程
 
-## createApp函数是什么？
+## optionApi执行流程
 
 1. `packages\runtime-dom\src\index.ts` 中，传入参数`{data:xxx, methods:xx}`， 执行`const app = ensureRenderer().createApp(...args)。` `ensureRender()`方法返回`{ render, hydrate, createApp }`
 
@@ -36,16 +36,16 @@ createAppAPI就是接收了{data:xxx, methods:xx}的原始参数，该函数返�
 
  生成了真正意义上的`render`函数. 
 
-      1) `Component.render = compile(template, finalCompilerOptions)`
-      template是写的html代码
-      `finalCompilerOptions`. 配置`delimiters，isCustomElement`等
+1) `Component.render = compile(template, finalCompilerOptions)`
+template是写的html代码
+`finalCompilerOptions`. 配置`delimiters，isCustomElement`等
 
-      2) 执行`applyOptions(instance)`->packages\runtime-core\src\component.ts
-        处理自定义的method，data,mounted生命周期等等，
+2) 执行`applyOptions(instance)`->packages\runtime-core\src\component.ts
+处理自定义的method，data,mounted生命周期等等，
 
-        1-data定义成响应式属性`instance.data` = reactive(data)
+- data定义成响应式属性`instance.data` = reactive(data)
 
-        2-reactive在packages\reactivity\src\reactive.ts中
+- reactive在packages\reactivity\src\reactive.ts中
 
 5. `mountComponent`函数中执行完`setupComponent`之后，接下来开始执行`setupRenderEffect`函数了
 
@@ -79,32 +79,32 @@ createAppAPI就是接收了{data:xxx, methods:xx}的原始参数，该函数返�
 
 1) 只有生成vnode的时候用到了data定义的数据，就会触发一次 track函数
 
-2）创建一个全局WeakMap()属性targetMap, target是对象，html模板的值
-target作为WeakMap对象的键值，如果value没有值. 就创建一个Map()对象，并且设置一个Map对象
-targetMap.set(target, (depsMap = new Map()))
+2）创建一个全局`WeakMap()`属性`targetMap`, `target`是对象，html模板的值
+`target`作为`WeakMap`对象的键值，如果value没有值. 就创建一个Map()对象，并且设置一个Map对象
+`targetMap.set(target, (depsMap = new Map()))`
 
-3）Map()的值查询有没有Set()数组，如果没有. 就创建一个Set()对象,并且设置一个Set数组
-depsMap.set(key, (dep = createDep()))
+3）`Map()`的值查询有没有`Set()`数组，如果没有. 就创建一个`Set()`对象,并且设置一个Set数组
+`depsMap.set(key, (dep = createDep()))`
     
 4）最后就是把更新视图的函数，设置到dep数组里面; dep数组可以判断是否是唯一
 
-5-4. 拿到vnode之后，执行patch
+5-4. 拿到`vnode`之后，执行`patch`
 
-6. 当有一个值改变的时候，就会触发proxy的set方法（packages\reactivity\src\baseHandlers.ts）
+6. 当有一个值改变的时候，就会触发`proxy的set`方法（packages\reactivity\src\baseHandlers.ts）
 
-1）保存旧的值oldValue, 
+1）保存旧的值`oldValue`, 
 
-2）然后判断当前设置的key在对象中是否已经存在const hadKey=xxx; 
+2）然后判断当前设置的key在对象中是否已经存在`const hadKey=xxx`; 
 
-3）如果hadKey是false, 执行trigger（packages\reactivity\src\effect.ts）方法，传入add标识
+3）如果`hadKey`是`false`, 执行`trigger`（packages\reactivity\src\effect.ts）方法，传入add标识
 
-4）如果两个值不一样，执行trigger方法，传入set标识
+4）如果两个值不一样，执行`trigger`方法，传入set标识
 
-最终执行更新视图函数componentUpdateFn
+最终执行更新视图函数`componentUpdateFn`
 
 ## 多次触发data的值，如何只更新一次视图
 
-1. 定义new ReactiveEffect渲染函数的时候（packages\runtime-core\src\renderer.ts），有一个scheduler参数
+1. 定义`new ReactiveEffect`渲染函数的时候（packages\runtime-core\src\renderer.ts），有一个scheduler参数
 ```js
 const effect = (instance.effect = new ReactiveEffect(
     componentUpdateFn,
@@ -149,7 +149,7 @@ const effect = (instance.effect = new ReactiveEffect(
     
   */
     const { createApp } = Vue;
-    // var a = Vue.createApp
+
     var app = createApp({
       data() {
         return {
@@ -162,9 +162,6 @@ const effect = (instance.effect = new ReactiveEffect(
         setTimeout(() => {
           this.form.text = 'add-text';
         }, 3000)
-        // setInterval(() => {
-          // this.msg++
-        // }, 1000);
       },
       methods: {
         test() {

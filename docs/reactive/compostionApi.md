@@ -1,6 +1,6 @@
 # 组合式函数
 
-个人认为是为了代码更加清晰，在使用的时候，是需要关注return那几个参数就可以了，内部处理逻辑由内部完成
+为了代码更加清晰，在使用的时候，是需要关注return那几个参数就可以了，更有效的类型断言
 
 ## 执行流程
 
@@ -90,9 +90,6 @@ proxyToUse就是withProxy,取值的时候，会触发get方法
 
 4. 因为在setup里面属性添加了proxy，在生成vnode的时候，会触发get方法，然后就可以收集渲染函数了，在set的时候，就会触发渲染函数，实现更新
 
-## 总结
-
-compistionApi感觉就是为了代码更好维护，暴露出关键的数据，和方法，不需要关注组件里面做了什么。使得组件直接耦合清晰，方便维护
 
 ## 疑问
 
@@ -108,13 +105,20 @@ compistionApi感觉就是为了代码更好维护，暴露出关键的数据，�
 
   - ref()创建值，内部也是执行reactive()方法，来设置修改set，get操作符
 
-2. setup在Vue初始化的时候，会执行，在handleSetupResult函数里面，执行了一个非常重要函数`instance.setupState = proxyRefs(setupResult)`
-    函数proxyRefs->packages\reactivity\src\ref.ts
+2. setup在Vue初始化的时候，会执行，在handleSetupResult函数里面，执行了一个非常重要函数`instance.setupState = proxyRefs(setupResult)` packages\runtime-core\src\component.ts
+
+    函数`proxyRefs`->packages\reactivity\src\ref.ts
 
 2-1). 也就是定义proxy,定义了set，get函数，其中起get函数会的返回是执行unref(xxx)
-            即：`get: (target, key, receiver) => unref(Reflect.get(target, key, receiver))`
+    即：`get: (target, key, receiver) => unref(Reflect.get(target, key, receiver))`packages\reactivity\src\ref.ts
+    
 
 unref函数如果是定义了ref对象，就会返回ref.value, 也就是为什么在模板那里不需要用value属性获取的最终原因，get操作符已经内部的处理
+
+## 总结
+
+compistionApi感觉就是为了代码更好维护，暴露出关键的数据，和方法，不需要关注组件里面做了什么。使得组件直接耦合清晰，方便维护
+同时也对typescript更好的支持，更有效和更健壮的类型推断,对setup返回的对象使用Proxy, 遇到ref类型的数据进行set, get操作的时候，通过Proxy定义的get,set操作符进行处理
 
 ## 相关代码
 
