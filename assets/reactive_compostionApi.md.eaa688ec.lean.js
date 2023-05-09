@@ -1,1 +1,0 @@
-import{_ as s,c as n,o as a,N as l}from"./chunks/framework.7c29c9c7.js";const C=JSON.parse('{"title":"组合式函数","description":"","frontmatter":{},"headers":[],"relativePath":"reactive/compostionApi.md"}'),p={name:"reactive/compostionApi.md"},o=l("",25),e=[o];function t(c,r,D,F,y,i){return a(),n("div",null,e)}const d=s(p,[["render",t]]);export{C as __pageData,d as default};
