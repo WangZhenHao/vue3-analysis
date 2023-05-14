@@ -12,7 +12,9 @@ export const toReactive = <T extends unknown>(value: T): T =>
 ```
 
 
-3. ref定义了`get value`，和`set value`操作符，
+3. ref定义了`get value`，和`set value`操作符，设置`__v_isRef`为true
+  `__v_isRef`熟悉的好处就是，在模板写入`{{ xxx }}`渲染的时候，取值Proxy代理会取`xxx.value`
+
 
 4. 执行完之后，通过value取值，渲染目标的时候，就会取值value,顺便收集改渲染函数作为依赖
 
