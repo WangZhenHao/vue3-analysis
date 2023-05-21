@@ -1,4 +1,4 @@
-# render函数
+# 模板render函数的生成
 
 1: 执行`createApp({xxx})` packages\runtime-dom\src\index.ts, 返回一个app对象
 
