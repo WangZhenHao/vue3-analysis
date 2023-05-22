@@ -221,7 +221,7 @@ mountComponent(
 )
 ```
 
-4-1：`mountComponent`函数中执行一个非常重要方法`setupComponent(instance)`，这个就是初始化
+4-1：`mountComponent`函数中执行一个非常重要方法`setupComponent(instance)`，这个就是初始化packages\runtime-core\src\component.ts
 操作
 ```js
 export function setupComponent(
@@ -244,7 +244,7 @@ export function setupComponent(
 ```
 
 - `setupStatefulComponent`判断去vnode的type属性，判断是否有setup属性，如果有，执行setup的初始化
-4-2: 然后执行`finishComponentSetup`,这个就是生成render函数的核心代码
+4-2: 然后执行`finishComponentSetup`,这个就是生成render函数的核心代码packages\runtime-core\src\component.ts
 
 判断vnode中有没有`render`，如果没有，在判断没有`template`属性
 

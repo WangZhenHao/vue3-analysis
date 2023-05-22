@@ -1,7 +1,44 @@
 # 如何产生vnode？
 
-1. 执行`app.mount('#app')`,  在packages\runtime-core\src\apiCreateApp.ts 的createAppAPI函数，执行`.mount(xx)`,会执行到
+1. 通过执行`app.mount('#app')`方法，最后在 `finishComponentSetup`方法产出了模板render函数packages\runtime-core\src\component.ts
  `render(vnode, rootContainer, isSVG)`, render就是生成vnode，并且渲染vnode成为正式dom的函数
+```js
+// finishComponentSetup函数
+
+Component.render = compile(template, finalCompilerOptions)
+```
+
+2. 得到模板render函数之后，回到`mountComponent`函数，接着执行`setupRenderEffect` packages\runtime-core\src\renderer.ts
+```js
+setupRenderEffect(
+    instance,
+    initialVNode,
+    container,
+    anchor,
+    parentSuspense,
+    isSVG,
+    optimized
+)
+```
+
+2-1.  `setupRenderEffect`可以说生成渲染函数的函数。通过封装`componentUpdateFn`函数,
+- 给`ReactiveEffect`构造函数作为第一个参数
+- 定义`update`, 并且作为`ReactiveEffect`构造函数作为第二个参数
+
+```js
+const effect = (instance.effect = new ReactiveEffect(
+    componentUpdateFn,
+    () => queueJob(update),
+    instance.scope,
+))
+
+const update: SchedulerJob = (instance.update = () => effect.run())
+update.id = instance.uid
+```
+
+
+
+1. 执行`app.mount('#app')`,  在packages\runtime-core\src\apiCreateApp.ts 的createAppAPI函数，执行`.mount(xx)`,会执行到
 
 2. render函数在packages\runtime-core\src\renderer.ts 里面，vnode和渲染就是在这个函数开始
 
