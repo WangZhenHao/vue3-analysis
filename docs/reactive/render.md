@@ -285,9 +285,16 @@ if (!instance.render) {
   }
 ```
 
-通过执行`compile`函数，传入template模板，最终返回一个可执行的函数
+通过执行`compile`函数，传入template模板，最终返回一个可执行的函数, 如下：
 
 ```js
+(function anonymous(
+) {
+const _Vue = Vue
+const { createElementVNode: _createElementVNode } = _Vue
+
+const _hoisted_1 = /*#__PURE__*/_createElementVNode("div", null, "stasut", -1 /* HOISTED */)
+
 return function render(_ctx, _cache) {
   with (_ctx) {
     const { toDisplayString: _toDisplayString, createElementVNode: _createElementVNode, Fragment: _Fragment, openBlock: _openBlock, createElementBlock: _createElementBlock } = _Vue
@@ -325,6 +332,39 @@ setupRenderEffect(
 生成模板render函数之后，紧接着就是执行vnode生成和vnode渲染成正式dom的流程了
 
 至于`compile`编译html内容生成可执行函数，该算法可以单独摘出来研究了
+## 相关代码
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../../dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div>
+       {{msg}}
+    </div>
+    <div>stasut</div>
+  </div>
+  <script>  
+    const { createApp } = Vue;
+    
+    var app = createApp({
+      data() {
+        return {
+          msg: 'vue'
+        }
+      },
+    })
+    app.mount('#app')
+  </script>
+</body>
+</html>
+```
 
 ## 疑问
 
@@ -431,39 +471,6 @@ Vue编译的render函数，
 自定义render函数
 - 定义Proxy使用`PublicInstanceProxyHandlers`中的操作符
 
-## 相关代码
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <script src="../../dist/vue.global.js"></script>
-</head>
-<body>
-  <div id="app">
-    <div>
-       {{msg}}
-    </div>
-    <div>stasut</div>
-  </div>
-  <script>  
-    const { createApp } = Vue;
-    
-    var app = createApp({
-      data() {
-        return {
-          msg: 'vue'
-        }
-      },
-    })
-    app.mount('#app')
-  </script>
-</body>
-</html>
-```
 
 ## 相关代码 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/has

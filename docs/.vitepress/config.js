@@ -35,9 +35,9 @@ export default defineConfig({
           { text: 'data响应式', link: '/reactive/data' },
           { text: 'Proxy特性的应用', link: '/reactive/proxy' },
           { text: '组合式函数流程', link: '/reactive/compostionApi' },
+          { text: 'render函数', link: '/reactive/render' },
           { text: '如何产生vnode', link: '/reactive/vnode' },
-          { text: 'vnode渲染真实dom', link: '/reactive/patch' },
-          { text: 'render函数', link: '/reactive/render' }
+          { text: 'vnode渲染真实dom', link: '/reactive/patch' }
         ],
       },
       {
