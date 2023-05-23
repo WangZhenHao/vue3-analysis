@@ -41,7 +41,8 @@ update();
 
 2-1. 紧接着就是执行`update()`, 直接说就是执行`componentUpdateFn`函数
 
-- 初次渲染的时候，isMounted为false, 执行核心方法`const subTree = (instance.subTree = renderComponentRoot(instance))`
+- 初次渲染的时候，isMounted为false, 执行核心方法
+ `const subTree = (instance.subTree = renderComponentRoot(instance))`(packages\runtime-core\src\renderer.ts)
   这个就是生成虚拟vnode的核心函数
 
 ```js

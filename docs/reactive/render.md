@@ -62,15 +62,6 @@ const render: RootRenderFunction = (vnode, container, isSVG) => {
         isSVG?: boolean
       ): any {
         if (!isMounted) {
-          // #5571
-          if (__DEV__ && (rootContainer as any).__vue_app__) {
-            warn(
-              `There is already an app instance mounted on the host container.\n` +
-                ` If you want to mount another app on the same host container,` +
-                ` you need to unmount the previous app by calling \`app.unmount()\` first.`
-            )
-          }
-          // debugger
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
@@ -80,12 +71,7 @@ const render: RootRenderFunction = (vnode, container, isSVG) => {
           vnode.appContext = context
 
           // HMR root reload
-          if (__DEV__) {
-            context.reload = () => {
-              render(cloneVNode(vnode), rootContainer, isSVG)
-            }
-          }
-
+          
           if (isHydrate && hydrate) {
             hydrate(vnode as VNode<Node, Element>, rootContainer as any)
           } else {
@@ -96,19 +82,7 @@ const render: RootRenderFunction = (vnode, container, isSVG) => {
           // for devtools and telemetry
           ;(rootContainer as any).__vue_app__ = app
 
-          if (__DEV__ || __FEATURE_PROD_DEVTOOLS__) {
-            app._instance = vnode.component
-            devtoolsInitApp(app, version)
-          }
-
           return getExposeProxy(vnode.component!) || vnode.component!.proxy
-        } else if (__DEV__) {
-          warn(
-            `App has already been mounted.\n` +
-              `If you want to remount the same app, move your app creation logic ` +
-              `into a factory function and create fresh app instances for each ` +
-              `mount - e.g. \`const createMyApp = () => createApp(App)\``
-          )
         }
       },
 
