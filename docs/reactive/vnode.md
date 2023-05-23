@@ -1,7 +1,8 @@
 # 如何产生vnode？
 
-1. 通过执行`app.mount('#app')`方法，最后在 `finishComponentSetup`方法产出了模板render函数packages\runtime-core\src\component.ts
- `render(vnode, rootContainer, isSVG)`, render就是生成vnode，并且渲染vnode成为正式dom的函数
+1. 通过执行`app.mount('#app')`方法，在mount方法里面开始执行`render(vnode, rootContainer, isSVG)`packages\runtime-core\src\apiCreateApp.ts
+
+  最后在 `finishComponentSetup`方法产出了模板render函数packages\runtime-core\src\comp
 ```js
 // finishComponentSetup函数
 
@@ -34,74 +35,97 @@ const effect = (instance.effect = new ReactiveEffect(
 
 const update: SchedulerJob = (instance.update = () => effect.run())
 update.id = instance.uid
+
+update();
 ```
 
+2-1. 紧接着就是执行`update()`, 直接说就是执行`componentUpdateFn`函数
 
+- 初次渲染的时候，isMounted为false, 执行核心方法`const subTree = (instance.subTree = renderComponentRoot(instance))`
+  这个就是生成虚拟vnode的核心函数
 
-1. 执行`app.mount('#app')`,  在packages\runtime-core\src\apiCreateApp.ts 的createAppAPI函数，执行`.mount(xx)`,会执行到
-
-2. render函数在packages\runtime-core\src\renderer.ts 里面，vnode和渲染就是在这个函数开始
-
-2-1. 接着执行`patch(container._vnode || null, vnode, container, null, null, null, isSVG)`
- 
- - 第一个参数是新vnode, 第二个参数是旧的vnode, 第三个参数是节点对象（类似`document.querySelector('#app')`）
-
- - 判断vnode类型`shapeFlag & ShapeFlags.ELEMENT`, 相同的值，判断为true执行：
-
- ```js
-processComponent(
-    n1,
-    n2,
-    container,
-    anchor,
-    parentComponent,
-    parentSuspense,
-    isSVG,
-    slotScopeIds,
-    optimized
-)-->
-mountComponent(
-    n2,
-    container,
-    anchor,
-    parentComponent,
-    parentSuspense,
-    isSVG,
-    optimized
-)
- ```
-由于是第一次渲染，所以执行`mountComponent`方法
-
-3. `mountCompoent`执行两个很重要方法
 ```js
-if (!(__COMPAT__ && compatMountInstance)) {
-    if (__DEV__) {
-    startMeasure(instance, `init`)
+const componentUpdateFn = () => {
+      // debugger
+      if (!instance.isMounted) {
+        if (el && hydrateNode) {
+          
+        } else {
+          const subTree = (instance.subTree = renderComponentRoot(instance))
+
+          patch(
+            null,
+            subTree,
+            container,
+            anchor,
+            instance,
+            parentSuspense,
+            isSVG
+          )
+          
+          initialVNode.el = subTree.el
+        }
+
+        instance.isMounted = true
+      }
     }
-    setupComponent(instance)
-    if (__DEV__) {
-    endMeasure(instance, `init`)
+```
+
+3. `renderComponentRoot` 执行render函数生成vnode packages\runtime-core\src\componentRenderUtils.ts
+
+```js
+export function renderComponentRoot(
+  instance: ComponentInternalInstance
+): VNode {
+  const {
+    type: Component,
+    vnode,
+    proxy,
+    withProxy,
+    props,
+    propsOptions: [propsOptions],
+    slots,
+    attrs,
+    emit,
+    render,
+    renderCache,
+    data,
+    setupState,
+    ctx,
+    inheritAttrs
+  } = instance
+  
+  let result
+
+  try {
+    if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+      const proxyToUse = withProxy || proxy
+      result = normalizeVNode(
+        render!.call(
+          proxyToUse,
+          proxyToUse!,
+          renderCache,
+          props,
+          setupState,
+          data,
+          ctx
+        )
+      )
+      fallthroughAttrs = attrs
     }
+  } catch (err) {
+    blockStack.length = 0
+    handleError(err, instance, ErrorCodes.RENDER_FUNCTION)
+    
+  }
+
+  return result
 }
-
-setupRenderEffect(
-    instance,
-    initialVNode,
-    container,
-    anchor,
-    parentSuspense,
-    isSVG,
-    optimized
-)
 ```
 
-- `setupComponent(instatnce)`packages\runtime-core\src\component.ts处理data响应式,methods,props，setup等参数，也是render函数生成的地方
-  `finishComponentSetup(instance, isSSR)`-> `Component.render = compile(template, finalCompilerOptions)`
+- proxyToUse是实例，执行模板render函数的上下文，withProxy的值是：
 
-- 其中`finishComponentSetup`函数,对ctx进行处理，是的实例在执行render函数的时候可以访问data, methods等等， RuntimeCompiledPublicInstanceProxyHandlers
-  函数定一个了set,get,has方式，用于对变量的预处理
 ```js
-
 installWithProxy = i => {
     if (i.render!._rc) {
         i.withProxy = new Proxy(i.ctx, RuntimeCompiledPublicInstanceProxyHandlers)
@@ -111,27 +135,23 @@ installWithProxy = i => {
 if (installWithProxy) {
     installWithProxy(instance)
 }
-
 ```
 
-- `setupComponent`做好了所有的准备工作，接着就是执行`setupRenderEffect`
+- 最终拿到vnode的值
+<p>
+  <img src="../.vitepress/public/reactive/vnode.png" alt="vitepress init screenshot" style="border-radius:8px">
+</p>
 
-3-1. `setupRenderEffect`可以说生成渲染函数的函数，`ReactiveEffect`对象就是渲染函数，data对象的属性搜集依赖
-也就是收集`effct`函数实例，接着执行`effct.run()`,生成vnode,渲染真实dom的工作开始
-
+- proxy的值是
 ```js
-const effect = (instance.effect = new ReactiveEffect(
-    componentUpdateFn,
-    () => queueJob(update),
-    instance.scope // track it in component's effect scope
-))
+// packages\runtime-core\src\component.ts
+instance.proxy = markRaw(new Proxy(instance.ctx, PublicInstanceProxyHandlers))
 ```
 
-- `componentUpdateFn`函数，主要执行生成vnode, 渲染真实dom
+生成vnode取值的时候，就会触发get的操作符`RuntimeCompiledPublicInstanceProxyHandlers`or`PublicInstanceProxyHandlers`
 
+4. vnode中有两个值为：children和dynamicChildren，拿到vnode之后，这就是就是vnode渲染成正式的DOM了
 ```js
-const subTree = (instance.subTree = renderComponentRoot(instance))
-->
 patch(
     null,
     subTree,
@@ -143,7 +163,101 @@ patch(
 )
 ```
 
-- `renderComponentRoot(instance)`生成的虚拟节点有children， dynamicChildren这两个重要参数
+## 总结
+Vue把模板render生成vnode的过程封装成一个函数`componentUpdateFn`，保存``中,
+- 当目的就是在执行模板render生成vnode，触发get操作符的时候，让响应式属性都收集到一个`ReactiveEffect`实例
+  通过产生的vnode，传给`patch`渲染成真实dom
+
+- 当触发的set操作符的时候，又可以执行`ReactiveEffect`实例中的`componentUpdateFn`，产生新的vnode
+  传给`patch`新vnode和就vnode对比，渲染成真实dom
+
+render函数有自定义的，也有编译编译生成的，他们的主要区别是Proxy的的操作函数不一样
+
+- 编译生成函数的上下文取值，会执行`RuntimeCompiledPublicInstanceProxyHandlers`函数
+
+- 自定义的render函数上下文取值，会执行`PublicInstanceProxyHandlers`函数
 
 
-- 下划线`_`定义的变量有硬性要求
+
+## 相关代码
+
+- 模拟ReactiveEffect函数
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function ReactiveEffect(fn, scheduler) {
+            this.fn = fn;
+            this.scheduler = scheduler;
+        }
+
+        ReactiveEffect.prototype = {
+            run: function() {
+                this.fn()
+            }
+        }
+        function setupRenderEffect() {
+            var fn = function fn() { console.log('fn') };
+
+            var effect = new ReactiveEffect(
+                fn,
+                () => {
+                    setTimeout(update, 100)
+                }
+            )
+
+            const update = () => effect.run()
+
+            update()
+
+            effect.scheduler()
+        }
+        setupRenderEffect()
+    </script>
+</body>
+</html>
+```
+
+## 相关代码
+
+- 调试代码
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../../dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div>
+       {{msg}}
+    </div>
+    <div>stasut</div>
+  </div>
+  <script>  
+    const { createApp } = Vue;
+    
+    var app = createApp({
+      data() {
+        return {
+          msg: 'vue'
+        }
+      },
+    })
+    app.mount('#app')
+  </script>
+</body>
+</html>
+```
