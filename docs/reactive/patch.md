@@ -229,7 +229,10 @@ if (props) {
 </p>
 
 ## 总结
-通过递归遍历vnode来渲染dom,`patch`->`processFragment`->`mountChildren`(遍历children数组)->`patch`, 递归执行，最终一步一步把vnode的内容渲染成真实DOM
+通过递归遍历vnode来渲染dom
+类似于：`patch`->`processFragment`->`mountChildren`(遍历children数组)->`patch`->`processElement`->`mountElement`->`mountChildren`->`patch`
+
+递归执行，最终一步一步把vnode的内容渲染成真实DOM
 
 ## 相关代码
 ```html
