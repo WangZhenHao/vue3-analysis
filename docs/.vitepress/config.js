@@ -37,7 +37,8 @@ export default defineConfig({
           { text: '组合式函数流程', link: '/reactive/compostionApi' },
           { text: 'render函数', link: '/reactive/render' },
           { text: '如何产生vnode', link: '/reactive/vnode' },
-          { text: 'vnode渲染真实dom', link: '/reactive/patch' }
+          { text: 'vnode渲染真实dom', link: '/reactive/patch' },
+          { text: 'vnode的update', link: '/reactive/patchUpdate' },
         ],
       },
       {
