@@ -1,4 +1,4 @@
-# 如何更新vnode,重新patch
+# 如何更新vnode,重新渲染DOM
 
 1. 在第一次生成vnode的时候，触发get，令属性收集到包含`componentUpdateFn`函数的`ReactiveEffect`实例
 
@@ -200,7 +200,25 @@ Vue的属性值改变了，就会触发到set操作符，应为get操作符收�
 
 ```html
 <script>  
+  const { createApp } = Vue;
   
+  var app = createApp({
+    data() {
+      return {
+        list: [
+          '1',
+          '2',
+          '3',
+        ]
+      }
+    },
+    mounted() {
+      setTimeout(() => {
+        this.list = ['tes', 'a'];
+      }, 5000)
+    }
+  })
+  app.mount('#app')        
 </script>
 ```
 
@@ -253,25 +271,7 @@ const patchUnkeyedChildren = (
         null,
         parentComponent,
         parentSuspense,
-const { createApp } = Vue;
-  
-  var app = createApp({
-    data() {
-      return {
-        list: [
-          '1',
-          '2',
-          '3',
-        ]
-      }
-    },
-    mounted() {
-      setTimeout(() => {
-        this.list = ['tes', 'a'];
-      }, 5000)
-    }
-  })
-  app.mount('#app')        isSVG,
+        isSVG,
         slotScopeIds,
         optimized
       )
@@ -388,12 +388,14 @@ remove: child => {
 - 判断旧vnode和新vnode的长度判断，得出是需要新增dom
 
 - 执行`mountChildren`
-c2           新列表vnode
-container  
+c2                新列表vnode
+container         执行`const patchBlockChildren:` 时候拿到的，为循环的列表的元素
+
+commonLength      旧vnode列表的长度
 
 ```js
-  mountChildren(
-    c2,
+  const mountChildren: MountChildrenFn = (
+    children,
     container,
     anchor,
     parentComponent,
@@ -401,9 +403,45 @@ container
     isSVG,
     slotScopeIds,
     optimized,
-    commonLength
-  )
+    start = 0
+  ) => {
+    for (let i = start; i < children.length; i++) {
+      const child = (children[i] = optimized
+        ? cloneIfMounted(children[i] as VNode)
+        : normalizeVNode(children[i]))
+      patch(
+        null,
+        child,
+        container,
+        anchor,
+        parentComponent,
+        parentSuspense,
+        isSVG,
+        slotScopeIds,
+        optimized
+      )
+    }
+  }
 ```
+
+1-1. 遍历新vnode数组，初始值索引是旧vnode列表的长度，执行patch，用来创建一个新元素节点
+
+1-2. 最终执行到`mountElement`函数，执行`hostInsert(el, container, anchor)`
+
+把节点内容插入列表里面
+```js
+  insert: (child, parent, anchor) => {
+    parent.insertBefore(child, anchor || null)
+  }
+```
+
+1-3. 这时候就渲染到了最新的dom内容
+
+## 总结
+列表长度变成和变短，前面的流程都会一样，都是对原来的内容，先进行覆盖，在对后面的内容处理，
+如果新vnode列表长度大于旧vnode列表长度，那么就对dom内容进行新增的插入
+如果新vnode列表长度小于旧vnode列表长度，那么就对dom内容进行删除
+
 ## 相关代码
 ```html
 <!DOCTYPE html>
