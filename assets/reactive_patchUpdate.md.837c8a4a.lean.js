@@ -1,1 +1,0 @@
-import{_ as s,c as n,o as a,N as l}from"./chunks/framework.7c29c9c7.js";const i=JSON.parse('{"title":"如何更新vnode,重新patch","description":"","frontmatter":{},"headers":[],"relativePath":"reactive/patchUpdate.md"}'),p={name:"reactive/patchUpdate.md"},o=l("",49),e=[o];function t(c,r,y,F,D,C){return a(),n("div",null,e)}const d=s(p,[["render",t]]);export{i as __pageData,d as default};
