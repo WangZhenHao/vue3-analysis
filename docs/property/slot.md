@@ -142,7 +142,7 @@ return function render(_ctx, _cache) {
 ## 总结
 Vue先把父组件的html模板编译生成render函数，组件和在组件里面使用的插槽，会做特殊处理。接着生成vnode。
 父组件的vnode开始执行patch渲染，如果遇到children是普通元素，直接渲染成真实DOM,遇到组件的时候，又会执行一些的初始化，
-- 初始化组件的data, props, 处理template，把父组件的插槽函数赋值给$slots， 生成render函数
+- 初始化组件的data, props, 处理template，把父组件的插槽函数赋值给子组件实例的$slots中， 生成render函数
 - 类似于vue的初始化流程
 
 执行render函数，再生成vnode的时候，执行`_renderSlot($slots, "header")`,其实就是执行父组件的$slots.heander生成vnode
