@@ -6,17 +6,17 @@
 
 ![demo](https://github.com/WangZhenHao/vue3-analysis/raw/master/docs/.vitepress/public/1.jpg)
 
-## 文档地址
+## gitpage文档地址
 https://wangzhenhao.github.io/vue3-analysis/
 
-## git仓库
+- git仓库
 https://github.com/WangZhenHao/vue3-analysis
 
 
-## vitepress文档使用
+- vitepress文档使用
 https://vitepress.dev/
 
-## github action自动部署
+- github action自动部署
 https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
 
 ### qq讨论群：475870039

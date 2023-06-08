@@ -6,11 +6,6 @@ export default defineConfig({
   outDir: '../dist',
   lang: 'en-US',
   title: 'vue3源码解析',
-  // description: '直白，简单的方式去学习Vue3源码',
-  // markdown: {
-  //   theme: 'material-theme-palenight',
-  //   lineNumbers: true,
-  // },
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
@@ -50,6 +45,12 @@ export default defineConfig({
           { text: 'watch案例', link: '/property/watch2' },
           { text: 'computed', link: '/property/computed' },
           { text: 'slot插槽', link: '/property/slot' },
+        ]
+      },
+      {
+        'text': 'Vue的高级应用',
+        items: [
+
         ]
       }
     ],
