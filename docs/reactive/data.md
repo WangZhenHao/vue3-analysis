@@ -2,9 +2,19 @@
 > 没有在data定义属性，但是在新增一个属性的时候，是如何更新视图的呢？例如：data中的form没有定义text属性，但是修改form.text的时候，却可以更新视图(看相关代码)
 
 
-1. data使用了new Proxy()封装`instance.data = reactive(data)`->packages\runtime-core\src\componentOptions.ts
+1. 处理data的数据在`finishComponentSetup函数`里面（packages\runtime-core\src\componentOptions.ts），主要是对data使用了new Proxy()封装`instance.data = reactive(data)`
 
-1-1. 这时候，data里面定义的值，有个get和set属性
+```js
+ // support for 2.x options
+  if (__FEATURE_OPTIONS_API__ && !(__COMPAT__ && skipOptions)) {
+    setCurrentInstance(instance)
+    pauseTracking()
+    applyOptions(instance)
+    resetTracking()
+    unsetCurrentInstance()
+  }
+```
+- 执行`applyOptions(instance)`, 这时候data里面定义的值，有个get和set属性
 
 2. 开始执行render函数生成vnode，在这个过程中就会触发get方法，处理如下：
     `packages\reactivity\src\baseHandlers.ts-> createGetter(isReadonly = false, shallow = false)`

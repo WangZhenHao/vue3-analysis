@@ -172,3 +172,99 @@ compistionApi感觉就是为了代码更好维护，暴露出关键的数据，�
 </body>
 </html>
 ```
+
+
+## 疑问
+
+> 怎么在setup函数里面写render
+
+1. 在执行初始化的时候，会执行`setupCompoent函数`packages\runtime-core\src\component.ts
+
+该函数主要初始化Props，Solot，执行`setupStatefulComponent函数`
+
+1-1. `setupStatefulComponent函数`函数就是处理setup函数了
+
+- 判断有没有setup，如果有，执行setup函数，赋值给setupResult
+```js
+const setupResult = callWithErrorHandling(
+      setup,
+      instance,
+      ErrorCodes.SETUP_FUNCTION,
+      [__DEV__ ? shallowReadonly(instance.props) : instance.props, setupContext]
+)
+```
+
+- 判断setupResult的类型，如果不是Promise类型，执行`handleSetupResult函数`
+
+1-2. `handleSetupResult函数` 判断setupResult是否是一个函数，如果为true，
+赋值`instance.render = setupResult as InternalRenderFunction`
+
+```js
+if (isFunction(setupResult)) {
+    // setup returned an inline render function
+    if (__SSR__ && (instance.type as ComponentOptions).__ssrInlineRender) {
+      // when the function's name is `ssrRender` (compiled by SFC inline mode),
+      // set it as ssrRender instead.
+      instance.ssrRender = setupResult
+    } else {
+      instance.render = setupResult as InternalRenderFunction
+    }
+  }
+```
+
+1-3. 最后执行`finishComponentSetup(instance, isSSR)`,因为有render属性了，就不走模板编译了， 最后会对data定义的数据进行响应式处理
+
+```js
+ // support for 2.x options
+  if (__FEATURE_OPTIONS_API__ && !(__COMPAT__ && skipOptions)) {
+    setCurrentInstance(instance)
+    pauseTracking()
+    applyOptions(instance)
+    resetTracking()
+    unsetCurrentInstance()
+  }
+```
+
+## 总结
+
+setup函数除了返回对象，也可以返回一个函数，如果返回的是一个函数，会认为是一个经过编译的render函数
+在后面执行patch的时候，会执行这个render函数生成vnode,渲染成DOM
+
+
+## 相关代码
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../../dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        var { createApp, h } = Vue;
+        var app = createApp({
+            data() {
+                return {
+                    txt: 'VUE'
+                }
+            },
+            setup() {
+                return (ctx) => {
+                    with(ctx) {
+                        return h('h1', txt)
+                    }
+                }
+            }
+        })
+
+        app.mount('#app')
+    </script>
+</body>
+</html>
+```

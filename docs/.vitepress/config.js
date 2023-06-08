@@ -28,7 +28,6 @@ export default defineConfig({
         items: [
           { text: 'Vue渲染流程', link: '/reactive/optionApi' },
           { text: 'data响应式', link: '/reactive/data' },
-          { text: 'Proxy特性的应用', link: '/reactive/proxy' },
           { text: '组合式函数流程', link: '/reactive/compostionApi' },
           { text: 'render函数', link: '/reactive/render' },
           { text: '如何产生vnode', link: '/reactive/vnode' },
@@ -48,9 +47,10 @@ export default defineConfig({
         ]
       },
       {
-        'text': 'Vue的高级应用',
+        'text': 'Vue最佳实践',
         items: [
-
+          { text: 'Proxy特性的应用', link: '/reactive/proxy' },
+          { text: '函数式组件-弹层', link: '/practice/toast' },
         ]
       }
     ],
