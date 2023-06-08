@@ -1,7 +1,7 @@
 # 函数式组件-弹层
 
 ## 疑问
-> 在使用第三方UI库的时候，加载组件，弹窗组件可以通过函数直接调用是怎么做到的呢？
+> 在使用第三方UI库的时候，loading组件，弹窗组件可以通过函数直接调用是怎么做到的呢？
 <p>
   <img src="../.vitepress/public/practice/toast.jpg" alt="vitepress init screenshot" style="border-radius:8px">
 </p>
