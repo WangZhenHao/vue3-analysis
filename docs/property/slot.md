@@ -1,5 +1,66 @@
 # slot插槽解读
 
+## 相关代码
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../../dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>你好</h1>
+        <test>
+            <template v-slot:footer>
+                <button @click="alert">footer</button>
+            </template>
+
+            <template v-slot:header>
+                <h1>header</h1>
+            </template>
+        </test>
+    </div>
+    <script>
+        var { createApp  } = Vue;
+
+        var app = createApp({
+            methods: {
+                alert() {
+                    alert(1)
+                }
+            },
+            mounted() {
+                console.log(this.$slots)
+            }
+        })
+
+        app.component('test', {
+            template: `
+                <div>
+                    <main>组件</main>
+                    <header>
+                        <slot name="header"></slot>
+                    </header>
+                    <footer>
+                       <slot name="footer"></slot>
+                    </footer>
+                </div>
+            `,
+            mounted() {
+                console.log(this.$slots.footer())
+            }
+        })
+
+        app.mount('#app')
+    </script>
+</body>
+</html>
+```
+
 1. 编译父html模板，得到render函数
 
 - render函数中就包含了footer函数，和header函数，这两个函数如果执行是可以返回vnode
@@ -145,5 +206,5 @@ Vue先把父组件的html模板编译生成render函数，组件和在组件里�
 - 初始化组件的data, props, 处理template，把父组件的插槽函数赋值给子组件实例的$slots中， 生成render函数
 - 类似于vue的初始化流程
 
-执行render函数，再生成vnode的时候，执行`_renderSlot($slots, "header")`,其实就是执行父组件的$slots.heander生成vnode
-拿到vnode，接着执行patch，渲染成真实DOM
+执行组件的render函数，在生成vnode的时候，执行`_renderSlot($slots, "header")`,其实就是执行父组件的$slots.heander生成vnode
+拿到vnode，接着执行patch，把子组件渲染成真实DOM
