@@ -50,7 +50,7 @@ export default defineConfig({
         'text': 'Vue最佳实践',
         items: [
           { text: 'Proxy特性的应用', link: '/practice/proxy' },
-          { text: '函数式组件-弹层', link: '/practice/toast' },
+          { text: '函数调用式的组件-弹层', link: '/practice/toast' },
         ]
       }
     ],
