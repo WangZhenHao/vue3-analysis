@@ -54,7 +54,21 @@
 ```
 这时候就完成了yarn dev命令的构建
 
+### dist目录输出的格式化
+- vue.cjs.js
+CommonJS 适用于node
 
+- vue.esm-browser.js
+ES模块 别名esm, module。适用于现代浏览器包含有<script type=module>标识
+
+- vue.global.js
+iife，自执行函数，适用于<script>标识
+
+- vue.runtime.esm-browser.js
+es模块，vue简洁版，没有编译的函数代码, 适用于node的引入
+
+- vue.runtime.global.js
+iife 自执行函数，vue简洁版，没有编译的函数代码，适用于浏览器引入
 ## 执行单独模块： 
 ```
 npm run dev template-explorer

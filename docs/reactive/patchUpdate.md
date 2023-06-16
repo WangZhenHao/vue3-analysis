@@ -199,8 +199,21 @@ Vue的属性值改变了，就会触发到set操作符，应为get操作符收�
 ## 列表渲染遇到数组变少的场景
 
 ```html
-<script>  
-  const { createApp } = Vue;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../../dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+        <button>静态</button>
+        <li v-for="item in list">{{ item }}</li>
+  </div>
+  <script>  
+    const { createApp } = Vue;
   
   var app = createApp({
     data() {
@@ -218,8 +231,34 @@ Vue的属性值改变了，就会触发到set操作符，应为get操作符收�
       }, 5000)
     }
   })
-  app.mount('#app')        
-</script>
+  app.mount('#app')  
+
+  </script>
+</body>
+</html>
+```
+```js
+// render函数
+(function anonymous(
+) {
+const _Vue = Vue
+const { createElementVNode: _createElementVNode } = _Vue
+
+const _hoisted_1 = /*#__PURE__*/_createElementVNode("button", null, "静态", -1 /* HOISTED */)
+
+return function render(_ctx, _cache) {
+  with (_ctx) {
+    const { createElementVNode: _createElementVNode, renderList: _renderList, Fragment: _Fragment, openBlock: _openBlock, createElementBlock: _createElementBlock, toDisplayString: _toDisplayString } = _Vue
+
+    return (_openBlock(), _createElementBlock(_Fragment, null, [
+      _hoisted_1,
+      (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(list, (item) => {
+        return (_openBlock(), _createElementBlock("li", null, _toDisplayString(item), 1 /* TEXT */))
+      }), 256 /* UNKEYED_FRAGMENT */))
+    ], 64 /* STABLE_FRAGMENT */))
+  }
+}
+})
 ```
 
 1. 当数组的长度变短的时候，触发vnode更新
