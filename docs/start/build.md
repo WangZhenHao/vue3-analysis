@@ -59,10 +59,10 @@
 CommonJS 适用于node
 
 - vue.esm-browser.js
-ES模块 别名esm, module。适用于现代浏览器包含有<script type=module>标识
+ES模块 别名esm, module。适用于现代浏览器包含有`<script type=module>`标识
 
 - vue.global.js
-iife，自执行函数，适用于<script>标识
+iife，自执行函数，适用于`<script>`标识
 
 - vue.runtime.esm-browser.js
 es模块，vue简洁版，没有编译的函数代码, 适用于node的引入
