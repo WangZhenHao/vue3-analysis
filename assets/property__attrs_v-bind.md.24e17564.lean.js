@@ -1,0 +1,1 @@
+import{_ as s,c as n,o as a,N as l}from"./chunks/framework.7c29c9c7.js";const i=JSON.parse('{"title":"$attrs 解读","description":"","frontmatter":{},"headers":[],"relativePath":"property/$attrs&v-bind.md"}'),p={name:"property/$attrs&v-bind.md"},o=l("",4),t=[o];function e(c,F,r,D,y,C){return a(),n("div",null,t)}const d=s(p,[["render",e]]);export{i as __pageData,d as default};
