@@ -44,6 +44,7 @@ export default defineConfig({
           { text: 'watch案例', link: '/property/watch2' },
           { text: 'computed', link: '/property/computed' },
           { text: 'slot插槽', link: '/property/slot' },
+          { text: 'props', link: '/property/props' },
         ]
       },
       {
