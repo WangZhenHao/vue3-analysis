@@ -37,7 +37,7 @@ const render: RootRenderFunction = (vnode, container, isSVG) => {
 ```
 
 1-3-2: `createApp`的新函数，接受用户传入的参数，如：`{ data: {xxx}, mounte() {xxx}, methosd: {xxx} }`
-  返回的对象有
+  返回的对象有(packages\runtime-core\src\apiCreateApp.ts)
   ```js
  const app: App = (context.app = {
       use(plugin: Plugin, ...options: any[]) {
