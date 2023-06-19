@@ -150,7 +150,7 @@ return props![key]
 
 6. vnode已经把把`tips`的值显示, 接着就是把vnode渲染成正式DOM了
 
-### props的值为什么不可以设置？
+## props的值为什么不可以设置？
 
 子组件设置props的值得时候，会触发PublicInstanceProxyHandlers.set操作符packages\runtime-core\src\componentPublicInstance.ts
 
@@ -167,15 +167,19 @@ return props![key]
 主要是在子组件初始化的时候，执行`instance.props = isSSR ? props : shallowReactive(props)`
 
 props有了Proxy的特性，有get，和set函数的能力
-### 总结
-父级render生成vnode的时候，把props参数的值，接着执行vnode渲染成正式dom
-遇到子组件的时候，执行组件的初始化操作，生成render函数。接着开始生成vnode
+## 总结
+父级render生成vnode的时候，把父级data对于的值传给子组件的props，接着执行vnode渲染成正式dom
+
+遇到子组件的时候，执行组件的初始化操作，子组件实例保存props的值`instance.props = isSSR ? props : shallowReactive(props)`
+
+子组件生成render函数。接着开始生成vnode
+
 这时候，通过操作符`RuntimeCompiledPublicInstanceProxyHandlers`,拿到props的值
-生成vnode，如何继续渲染成正式的dom
+生成vnode，然后继续渲染成正式的dom
 
 
 
-### 相关代码
+## 相关代码
 
 ```html
 <!DOCTYPE html>
