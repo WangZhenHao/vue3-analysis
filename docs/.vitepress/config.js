@@ -45,6 +45,7 @@ export default defineConfig({
           { text: 'computed', link: '/property/computed' },
           { text: 'slot插槽', link: '/property/slot' },
           { text: 'props', link: '/property/props' },
+          { text: '$attrs和v-bind', link: '/property/attrs&v-bind' },
         ]
       },
       {
