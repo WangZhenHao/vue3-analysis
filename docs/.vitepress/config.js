@@ -49,6 +49,12 @@ export default defineConfig({
         ]
       },
       {
+        text: 'Vue的内置组件',
+        items: [
+          { text: 'component组件', link: '/component/component' }
+        ]
+      },
+      {
         'text': 'Vue最佳实践',
         items: [
           { text: 'Proxy特性的应用', link: '/practice/proxy' },
