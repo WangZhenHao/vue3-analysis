@@ -127,7 +127,7 @@ export function resolveDynamicComponent(component: unknown): VNodeTypes {
     }
 }"></component>
 ```
-component三种方式引入组件
+component四种方式引入组件
 
 - 1.render函数
 
