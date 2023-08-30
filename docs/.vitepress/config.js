@@ -28,7 +28,7 @@ export default defineConfig({
         items: [
           { text: 'Vue渲染流程', link: '/reactive/optionApi' },
           { text: 'data响应式', link: '/reactive/data' },
-          { text: '组合式函数流程', link: '/reactive/compostionApi' },
+          { text: 'setup-组合式流程', link: '/reactive/compostionApi' },
           { text: 'render函数', link: '/reactive/render' },
           { text: '如何产生vnode', link: '/reactive/vnode' },
           { text: 'vnode渲染真实dom', link: '/reactive/patch' },
