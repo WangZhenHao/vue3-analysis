@@ -12,6 +12,8 @@
   <img src="../.vitepress/public/start/build.jpg" alt="vitepress init screenshot" style="border-radius:8px">
 </p>
 
+> 使用javascript Debug Terminal面板，debugger执行流程
+
 ## pnpm run dev命令执行流程
 
 - 1. 先执行script文件夹中的dev.js, 改文件处理命令
@@ -55,6 +57,7 @@
 这时候就完成了yarn dev命令的构建
 
 ### npm run build vue命令执行流程
+
 
 1. 该命令会执行`node scripts/build.js`, 执行`build.js`中的`run()`函数, 由于传入参数是`vue`, 表示只构建目录vue的代码
 
