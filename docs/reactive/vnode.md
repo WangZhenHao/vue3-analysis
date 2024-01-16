@@ -2,7 +2,7 @@
 
 1. 通过执行`app.mount('#app')`方法，在mount方法里面开始执行`render(vnode, rootContainer, isSVG)`packages\runtime-core\src\apiCreateApp.ts
 
-  最后在 `finishComponentSetup`方法产出了模板render函数packages\runtime-core\src\comp
+  最后在 `finishComponentSetup`方法产出了模板render函数packages\runtime-core\src\component.ts
 ```js
 // finishComponentSetup函数
 

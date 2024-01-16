@@ -54,6 +54,27 @@
 ```
 这时候就完成了yarn dev命令的构建
 
+### npm run build vue命令执行流程
+
+1. 该命令会执行`node scripts/build.js`, 执行`build.js`中的`run()`函数, 由于传入参数是`vue`, 表示只构建目录vue的代码
+
+2. 执行打包配置`rollup.config.js`, 会产生12个打包配置保存在数组`packageConfigs`里面。配置参数是通过`createConfig`函数产生的
+
+  格式类型是通过vue/packpage.json的`buildOptions`获取
+
+3. 其中`createConfig`函数会判断入口文件是否有`runtime`关键字, 如果有，就把`vue/src/runtime.ts`作为入口文件进行打包，否则使用`vue/src/index.ts`作为入口文件
+
+4. `vue/src/index.ts`可以看到引入了`@vue/compiler-dom`的compile函数，这个函数就是编译`html代码`的函数。因此runtime版本的代码体积少很多
+```js
+// packages\vue\src\index.ts
+import { compile, CompilerOptions, CompilerError } from '@vue/compiler-dom'
+// 注册compiler函数，使得代码体积变大的主要原因
+registerRuntimeCompiler(compileToFunction)
+```
+<p>
+  <img src="../.vitepress/public/start/build2.jpg" alt="vitepress init screenshot" style="border-radius:8px">
+</p>
+
 ### dist目录输出的格式化
 - vue.cjs.js
 CommonJS 适用于node
