@@ -129,10 +129,11 @@ export function track(target: object, type: TrackOpTypes, key: unknown) {
 ## 总结
 执行`app = Vue.createApp(xxx)`,会进行初始化操作`ensureRenderer()`，闭包保存所有把vnode渲染为正式DOM的函数,并且把整个实例内容保存再`const context = createAppContext()`下面，把`xxx`参数保存在`context.app._component`下面
 
-执行`app.mount('#app')`,这个就是把渲染的整个过程。函数执行栈：mount->render->patch->processComponent->mountComponent->setupComponent
- `setupComponent`就是处理date, methods，把html模板编译成可执行render函数(packages\runtime-core\src\component.ts)
+执行`app.mount('#app')`,这个就是渲染的整个过程。函数执行栈：mount->render->patch->processComponent->mountComponent->setupComponent
 
-  接着执行`setupRenderEffect`再函数里面，把render函数执行生成vnode
+ - `setupComponent`就是处理date, methods，把html模板编译成可执行render函数(packages\runtime-core\src\component.ts)
+
+  - 接着执行`setupRenderEffect`再函数里面，把render函数执行生成vnode
   同时然date属性收集`componentUpdateFn`函数，该函数就是生成vnode，把vnode参数传给`patch`函数渲染正式DOM
 
 至此流程执行完毕
