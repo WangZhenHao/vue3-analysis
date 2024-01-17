@@ -8,7 +8,7 @@
 
 3. `ensureRenderer()`的`creteApp`，函数是packages\runtime-core\src\apiCreateApp.ts的createAppAPI方法
 
-createAppAPI就是接收了{data:xxx, methods:xx}的原始参数，该函数返回一个对象
+createAppAPI就是接收了`{data:xxx, methods:xx}`的原始参数，该函数返回一个对象
 
 ```js
 {
@@ -77,6 +77,30 @@ template是写的html代码
 ```
 5-3. 生成vnode值，就会触发proxy的createGetter->get()方法(packages\reactivity\src\baseHandlers.ts)，执行`track()`方法收集依赖packages\reactivity\src\effect.ts
 
+```js
+export const targetMap = new WeakMap<any, KeyToDepMap>()
+
+export function track(target: object, type: TrackOpTypes, key: unknown) {
+  if (shouldTrack && activeEffect) {
+    let depsMap = targetMap.get(target)
+    if (!depsMap) {
+      targetMap.set(target, (depsMap = new Map()))
+    }
+    let dep = depsMap.get(key)
+    if (!dep) {
+      depsMap.set(key, (dep = createDep()))
+    }
+
+    const eventInfo = __DEV__
+      ? { effect: activeEffect, target, type, key }
+      : undefined
+
+    trackEffects(dep, eventInfo)
+    // console.log(key, targetMap)
+  }
+}
+```
+
 1) 只有生成vnode的时候用到了data定义的数据，就会触发一次 track函数
 
 2）创建一个全局`WeakMap()`属性`targetMap`, `target`是对象，html模板的值
@@ -101,6 +125,17 @@ template是写的html代码
 4）如果两个值不一样，执行`trigger`方法，传入set标识
 
 最终执行更新视图函数`componentUpdateFn`
+
+## 总结
+执行`app = Vue.createApp(xxx)`,会进行初始化操作`ensureRenderer()`，闭包保存所有把vnode渲染为正式DOM的函数,并且把整个实例内容保存再`const context = createAppContext()`下面，把`xxx`参数保存在`context.app._component`下面
+
+执行`app.mount('#app')`,这个就是把渲染的整个过程。函数执行栈：mount->render->patch->processComponent->mountComponent->setupComponent
+ `setupComponent`就是处理date, methods，把html模板编译成可执行render函数(packages\runtime-core\src\component.ts)
+
+  接着执行`setupRenderEffect`再函数里面，把render函数执行生成vnode
+  同时然date属性收集`componentUpdateFn`函数，该函数就是生成vnode，把vnode参数传给`patch`函数渲染正式DOM
+
+至此流程执行完毕
 
 ## 多次触发data的值，如何只更新一次视图
 
