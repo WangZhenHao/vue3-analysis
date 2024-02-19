@@ -1,0 +1,1 @@
+import{_ as s,c as n,o as a,N as l}from"./chunks/framework.7c29c9c7.js";const C=JSON.parse('{"title":"生命周期","description":"","frontmatter":{},"headers":[],"relativePath":"property/lifeCycle.md"}'),p={name:"property/lifeCycle.md"},o=l("",21),e=[o];function t(c,r,y,F,D,A){return a(),n("div",null,e)}const d=s(p,[["render",t]]);export{C as __pageData,d as default};
