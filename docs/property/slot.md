@@ -199,6 +199,21 @@ return function render(_ctx, _cache) {
   <img src="../.vitepress/public/property/slot/5.jpg" alt="vitepress init screenshot" style="border-radius:8px">
 </p>
 
+## 使用
+- 在optionsApi中可以通过`this.$slots`方法
+- 在template可以通过`$slots`访问
+- 在compositionApi中可以用`useSlots()`访问
+
+```html
+<script setup>
+import { useSlots, useAttrs } from 'vue'
+
+const slots = useSlots()
+const attrs = useAttrs()
+</script>
+```
+
+
 
 ## 总结
 Vue先把父组件的html模板编译生成render函数，组件和在组件里面使用的插槽，会做特殊处理。接着生成vnode。
