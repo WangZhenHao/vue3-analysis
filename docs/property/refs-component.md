@@ -253,6 +253,8 @@ export const publicPropertiesMap: PublicPropertiesMap =
 
 - 在定义动态的:ref 如：`<test :ref="testRef1"></test>`，这种写法一般不推荐，如果想要获取到实例，必须要`const testRef1 = ref("testRef1")`
 
+或者`const testRef1 = ref("testRef1Value")；const testRef1Value = ref()`,用ref api定义`testRef1Value`去承接组件实例的赋值
+
 既变量名和值要一样。因为`setRef函数`里面，赋值组件实例执行了`setupState[ref] = value`
 
 - 定义静态ref，如`<test ref="testRef1"></test>`，在composition api中定义任何值都没有问题 `const testRef1 = ref("任何值")`
