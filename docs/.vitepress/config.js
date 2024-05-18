@@ -46,6 +46,7 @@ export default defineConfig({
           { text: 'slot插槽', link: '/property/slot' },
           { text: 'props', link: '/property/props' },
           { text: '$attrs和v-bind', link: '/property/attrs&v-bind' },
+          { text: '$refs获取组件实例', link: '/property/refs-component' }
           { text: '生命周期', link: '/property/lifeCycle' }
         ]
       },
