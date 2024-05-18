@@ -1,6 +1,6 @@
 # $refs 获取组件实例解读
 
-> 下列在 compostion api 中使用 ref 变量获取子组件的实例，会出现什么效果？
+> 下列在 compostion api 中使用不同的 ref api定义变量去获取子组件的实例，会出现什么效果？
 
 ```vue
 <script setup>
