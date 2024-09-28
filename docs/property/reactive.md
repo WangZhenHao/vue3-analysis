@@ -168,10 +168,40 @@ export const mutableHandlers: ProxyHandler<object> = {
 
 ## reactive和ref的关系
 
-- ref是一个构造函数，通过`get value`取值, `set value`设值，内部实现的属性响应式是调用`reactive`方法
+- reactive和ref同时调用了`reactive(value)`函数，设置定义的属性
 
+- ref是一个构造函数，通过`get value`取值, `set value`设值，
+在constructor内部实现的属性响应式是调用`reactive`方法
+
+```js
+class RefImpl<T> {
+
+  constructor(value: T, public readonly __v_isShallow: boolean) {
+    this._rawValue = __v_isShallow ? value : toRaw(value)
+    this._value = __v_isShallow ? value : toReactive(value)
+  }
+
+  get value() {
+    trackRefValue(this)
+    return this._value
+  }
+
+  set value(newVal) {
+    // debugger
+    const useDirectValue =
+      this.__v_isShallow || isShallow(newVal) || isReadonly(newVal)
+      // debugger
+    newVal = useDirectValue ? newVal : toRaw(newVal)
+    if (hasChanged(newVal, this._rawValue)) {
+      this._rawValue = newVal
+      this._value = useDirectValue ? newVal : toReactive(newVal)
+      triggerRefValue(this, newVal)
+    }
+  }
+}
+```
 - ref的好处是可以设置基本类型`number, string, boolean`和对象
-但是reactive只能设置对象作为一个响应式属性，如果是基本类型数据，不做处理
+但是`reactive`只能设置对象作为一个响应式属性，如果是基本类型数据，不做处理
 
 - ref通过可以赋值替换（既：test.value = xxx），因为这个是触发了`set value`方法，可以触发依赖更新
 但是对`reactive的值赋值替换`，这不会触发依赖的更新，应为引用已经改变了，又没有重新定义set, get操作符

@@ -108,7 +108,7 @@ export function traverse(value: unknown, seen?: Set<unknown>) {
 }
 
 ```
-`traverse`是递归获取对象值，让每一个属性都可以收集watch依赖，也就是可以深度监听值的核心步骤
+`traverse`（packages\runtime-core\src\apiWatch.ts）是递归获取对象值，让每一个属性都可以收集watch依赖，也就是可以深度监听值的核心步骤
 
 4：定义job函数，该函数会传入scheduler里面，作为异步队列执行的函数
 
@@ -193,7 +193,19 @@ run() {
     }
 }
 ```
-- `this.fn()` 就是开始定义的`getter`函数，用于触发对象的get操作符，搜集当前的`new ReactiveEffect`依赖
+
+- `activeEffect`赋值给`this.parent`, 保存当前的对象赋值给`activeEffect`
+```js
+ try {
+      this.parent = activeEffect
+      activeEffect = this
+      shouldTrack = true
+      return this.fn()
+    } finally {
+    }
+```
+
+-  `this.fn()` 就是开始定义的`getter`函数，用于触发对象的get操作符，搜集当前的` `作为依赖
 
 7：最后返回`unwatch`方法,可以用于停止执行当前watch的触发
 
@@ -209,6 +221,27 @@ const unwatch = () => {
   return unwatch
 ```
 
+## 总结
+
+执行`watch`监听的时候，会执行一系列的初始化操作，如：
+
+- 1：判断监听参数的类型，二次封装callback函数
+
+- 2：new一个依赖函数 `const effect = new ReactiveEffect(getter, scheduler)`, `gettter`包含`callback`
+
+- 3: 执行`effect.run()`, 把当前依赖赋值到全局依赖变量`activeEffect`里面，然后递归执行`traverse`函数，触发监听参数的`getter`操作符,触发依赖收集
+
+- 4：还原原本的依赖 `activeEffect = this.parent`
+
+最终callback函数，就被收集到
+类似：
+```js
+targetMap = {
+    {msg: 'hello vue'}: {
+      msg: [ReactiveEffect2, ReactiveEffect],
+    }
+}
+```
 ## watch的不同写法
 
 ```js
